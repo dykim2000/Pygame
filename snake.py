@@ -19,7 +19,8 @@ playSurface = pg.display.set_mode(gameSize)
 pg.display.set_caption("Snake Game")
 fps = pg.time.Clock()
 
-file = 'song/eat.wav'
+fm='song/main.mp3'
+fe = 'song/eat.wav'
 fd = 'song/end.mp3'
 fl = 'song/up.wav'
 
@@ -81,6 +82,7 @@ def showScore():
     playSurface.blit(Psurf, Prect)
 
 def inGame():
+    pg.mixer.music.stop()
     check = True
     state = ''
     change = ''
@@ -137,7 +139,7 @@ def inGame():
         snakeBody.insert(0, list(snakeHead))
 
         if drawHead.colliderect(drawFood):
-            pg.mixer.music.load(file)
+            pg.mixer.music.load(fe)
             pg.mixer.music.play()
             print('먹는다!')
             foodSpawn = False
@@ -190,6 +192,8 @@ def inGame():
         fps.tick(30)
 
 def main():
+    pg.mixer.music.load(fm)
+    pg.mixer.music.play()
     check = True
     while check:
         for event in pg.event.get():
@@ -197,7 +201,7 @@ def main():
                 pg.quit()
                 sys.exit()
         playSurface.fill(black)
-        endFont = pg.font.SysFont('times new roman', 100)
+        endFont = pg.font.SysFont('Stencil', 100)
         reFont = pg.font.SysFont('monaco', 50)
 
         GOsurf = endFont.render("SNAKE GAME", True, green)
