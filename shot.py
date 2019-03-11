@@ -1,19 +1,16 @@
 import pygame as pg
 import sys
+import random
 
-white = (255,255,255)
 size=[960,679]
+
 width = size[0]
 height = size[1]
-bwidth = width
 
 pg.init()
 
-def back(bg,x,y):
-    game.blit(bg,(x,y))
-
-def air(x,y):
-    game.blit(playerrly,(x,y))
+def drawobj(obj,x,y):
+    game.blit(obj,(x,y))
 
 def run():
     check = True
@@ -23,7 +20,11 @@ def run():
     y_ch = 0
 
     back_x=0
-    back_x2=bwidth
+    back_x2=width
+
+    enemy_x=width
+    enemy_y=random.randrange(0,height)
+
 
     while check:
         for event in pg.event.get():
@@ -44,27 +45,40 @@ def run():
         back_x-=8
         back_x2-=8
 
-        if back_x == -bwidth:
-            back_x=bwidth
-        if back_x2 == -bwidth:
-            back_x2=bwidth
+        enemy_x-=15
+        if enemy_x<=0:
+            enemy_x = width
+            enemy_y = random.randrange(0, height)
 
-        #game.fill(white)
-        back(backgr,back_x,0)
-        back(backgr2, back_x2, 0)
-        air(x,y)
+
+        if back_x == -width:
+            back_x=width
+        if back_x2 == -width:
+            back_x2=width
+
+        drawobj(backgr,back_x,0)
+        drawobj(backgr2, back_x2, 0)
+        drawobj(enemyrly,enemy_x,enemy_y)
+        drawobj(playerrly,x,y)
         pg.display.flip()
         fps.tick(60)
 
 def main():
-    global game,fps,playerrly,backgr,backgr2
+    global game,fps
+    global playerrly,backgr,backgr2
+    global enemyrly,bulletrly
 
-    game=pg.display.set_mode((width,height))
+    game = pg.display.set_mode((size))
     pg.display.set_caption('Shooting')
     player = pg.image.load('img/plane.png')
-    playerrly=pg.transform.scale(player,(120,90))
-    backgr=pg.image.load('img/sky.png')
-    backgr2=backgr.copy()
+    playerrly = pg.transform.scale(player,(120,90))
+    backgr = pg.image.load('img/sky.png')
+    backgr2 = backgr.copy()
+    enemy = pg.image.load('img/enemy.png')
+    enemyrly = pg.transform.scale(enemy,(120, 90))
+    bullet = pg.image.load('img/bullet.png')
+    bulletrly = pg.transform.rotate(bullet,180)
+    bulletrly = pg.transform.scale(bullet, (120,90))
     fps = pg.time.Clock()
 
     run()
