@@ -2,18 +2,72 @@ import pygame as pg
 import sys
 import random
 
+black = (0, 0, 0)
+red = (255, 0, 0)
+white = (255, 255, 255)
+
 size=[960,679]
 width = size[0]
 height = size[1]
 
-'''player_width = 150
-player_height = 150'''
+pl_x = 120
+pl_y = 70
+
+en_x = 100
+en_y = 90
+
+def drawsc():
+    SFont = pg.font.SysFont('monaco', 32)
+    Ssurf = SFont.render("Score  :  {0}".format(sc), True, white)
+
+    game.blit(Ssurf,(0,0))
+def crash():
+    check = True
+
+    while check:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                check = False
+        game.fill(black)
+        endFont = pg.font.SysFont('times new roman', 72)
+        reFont = pg.font.SysFont('monaco', 70)
+
+        GOsurf = endFont.render("Game Over", True, red)
+        GOrect = GOsurf.get_rect()
+        GOrect.midtop = (width / 2, (height / 2) - 50)
+        game.blit(GOsurf, GOrect)
+
+        Ssurf = endFont.render("Score  :  {0}".format(sc), True, red)
+        Srect = Ssurf.get_rect()
+        Srect.midtop = (width / 2, (height / 2) + 50)
+        game.blit(Ssurf, Srect)
+
+        pg.draw.rect(game, white, pg.Rect((width / 2) - 60, (height / 2) + 150, 120, 50))
+        text = reFont.render("RE?", True, black)
+        texts = text.get_rect()
+        texts.center = ((width / 2), (height / 2) + 180)
+        game.blit(text, texts)
+
+        cur = pg.mouse.get_pos()
+        click = pg.mouse.get_pressed()
+        if ((width / 2) - 60) + 120 > cur[0] > (width / 2) - 60 and ((height / 2) + 150) + 50 > cur[1] > (height / 2) + 150:
+            print('버튼 포인트')
+            if (click[0] == 1):
+                print('버튼 클릭')
+                main()
+        pg.display.flip()
 
 def drawobj(obj,x,y):
     game.blit(obj,(x,y))
 
 def run():
+    global sc
+    sc=0
+
     check = True
+
+    isShot = False
+    isCon = 0
 
     x=0
     y=0
@@ -25,13 +79,12 @@ def run():
     back_x2=width
 
     enemy_x=width
-    enemy_y=random.randrange(0,height)
+    enemy_y=random.randrange(0,height-en_y)
 
     while check:
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                pg.quit()
-                sys.exit()
+                check = False
 
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_UP:
@@ -39,8 +92,8 @@ def run():
                 elif event.key == pg.K_DOWN:
                     y_ch = 15
                 elif event.key == pg.K_s:
-                    bullet_x = x
-                    bullet_y = y+50
+                    bullet_x = x+pl_x
+                    bullet_y = y+pl_y/2
                     bullet_xy.append([bullet_x, bullet_y])
 
             if event.type == pg.KEYUP:
@@ -49,8 +102,8 @@ def run():
         y+=y_ch
         if y<0:
             y=0
-        elif y>height-100:
-            y=height-100
+        elif y>height-pl_y:
+            y=height-pl_y
 
         back_x-=8
         back_x2-=8
@@ -59,22 +112,40 @@ def run():
         if back_x2 == -width:
             back_x2=width
 
-        enemy_x-=15
+        enemy_x-=20
         if enemy_x<=0:
             enemy_x = width
-            enemy_y = random.randrange(0, height)
+            enemy_y = random.randrange(0, height-en_y)
 
         if len(bullet_xy)!=0:
             for i,bxy in enumerate(bullet_xy):
                 bxy[0]+=15
                 bullet_xy[i][0]=bxy[0]
+                if bxy[0] > enemy_x:
+                    if bxy[1] > enemy_y and bxy[1]<enemy_y+en_y:
+                        sc+=1
+                        bullet_xy.remove(bxy)
+                        isShot = True
                 if bxy[0]>=width:
                     bullet_xy.remove(bxy)
-
         drawobj(backgr,back_x,0)
         drawobj(backgr2, back_x2, 0)
+        drawsc()
         drawobj(player, x, y)
-        drawobj(enemy,enemy_x,enemy_y)
+        if x+pl_x > enemy_x:
+            if(y > enemy_y and y < enemy_y+en_y) or (y+pl_y > enemy_y and y+pl_y < enemy_y+en_y):
+                crash()
+                check = False
+        if not isShot:
+            drawobj(enemy,enemy_x,enemy_y)
+        else:
+            drawobj(boom,enemy_x,enemy_y)
+            isCon+=1
+            if isCon > 7:
+                isCon=0
+                enemy_x=width
+                enemy_y = random.randrange(0, height-en_y)
+                isShot = False
         if len(bullet_xy)!=0:
             for bx,by in bullet_xy:
                 drawobj(bullet,bx,by)
@@ -85,23 +156,27 @@ def main():
     pg.init()
     global game,fps
     global player,backgr,backgr2
-    global enemy,bullet
+    global enemy,bullet,boom
 
     game = pg.display.set_mode((size))
     pg.display.set_caption('Shooting')
     fps = pg.time.Clock()
 
     player = pg.image.load('img/plane.png')
-    player = pg.transform.scale(player,(120,70))
+    player = pg.transform.scale(player,(100,70))
     backgr = pg.image.load('img/sky.png')
     backgr2 = backgr.copy()
 
     enemy = pg.image.load('img/enemy.png')
-    enemy= pg.transform.scale(enemy,(100, 90))
+    enemy = pg.transform.flip(enemy,1,0)
+    enemy= pg.transform.scale(enemy,(150, 100))
 
     bullet = pg.image.load('img/bullet.png')
     bullet = pg.transform.rotate(bullet,180)
     bullet = pg.transform.scale(bullet, (50,10))
+
+    boom = pg.image.load('img/boom.png')
+    boom = pg.transform.scale(boom,(50,50))
 
     run()
 
