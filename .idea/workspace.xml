@@ -13,7 +13,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sample.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1615">
+            <state relative-caret-position="1273">
               <caret line="87" column="3" selection-start-line="87" selection-start-column="3" selection-end-line="88" selection-end-column="52" />
             </state>
           </provider>
@@ -22,10 +22,14 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/snake.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38">
-              <caret line="65" selection-start-line="65" selection-end-line="66" selection-end-column="68" />
+            <state relative-caret-position="431">
+              <caret line="189" selection-start-line="189" selection-end-line="189" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#435#1655#0" />
+                <element signature="e#1701#2306#0" />
+                <element signature="e#2319#5471#0" />
+                <element signature="e#5489#6525#0" />
               </folding>
             </state>
           </provider>
@@ -34,12 +38,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/shot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1729">
-              <caret line="138" column="22" lean-forward="true" selection-start-line="138" selection-start-column="22" selection-end-line="138" selection-end-column="22" />
+            <state relative-caret-position="641">
+              <caret line="143" column="33" selection-start-line="143" selection-start-column="33" selection-end-line="143" selection-end-column="33" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#156#1516#0" />
-                <element signature="e#167#187#0" />
+                <element signature="e#224#355#0" />
+                <element signature="e#374#1472#0" />
+                <element signature="e#1500#1520#0" />
+                <element signature="e#4098#4828#0" />
               </folding>
             </state>
           </provider>
@@ -48,7 +54,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/2017738780/pygame/transform.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
+            <state relative-caret-position="570">
               <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
             </state>
           </provider>
@@ -117,7 +123,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="953" />
     <option name="width" value="972" />
     <option name="height" value="1047" />
@@ -286,14 +292,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="953" y="0" width="972" height="1047" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.36402568" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17913593" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.33077765" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3263965" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3253796" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3991323" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -359,12 +365,18 @@
     <entry file="file://$PROJECT_DIR$/img/plane-311403_960_720.png" />
     <entry file="file://$PROJECT_DIR$/img/asd.png" />
     <entry file="file://$PROJECT_DIR$/img/abc.png" />
-    <entry file="file://$PROJECT_DIR$/sample.py">
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/2017738780/pygame/transform.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1615">
-          <caret line="87" column="3" selection-start-line="87" selection-start-column="3" selection-end-line="88" selection-end-column="52" />
+        <state relative-caret-position="570">
+          <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/img/boom.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/img/enemy.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/2017738780/pygame/surface.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -376,43 +388,43 @@
     <entry file="file://$PROJECT_DIR$/img/bullet.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/img/enemy.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/img/plane.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/img/sky.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/img/boom.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/2017738780/pygame/transform.py">
+    <entry file="file://$PROJECT_DIR$/sample.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
+        <state relative-caret-position="1273">
+          <caret line="87" column="3" selection-start-line="87" selection-start-column="3" selection-end-line="88" selection-end-column="52" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/snake.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="65" selection-start-line="65" selection-end-line="66" selection-end-column="68" />
+        <state relative-caret-position="431">
+          <caret line="189" selection-start-line="189" selection-end-line="189" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#435#1655#0" />
+            <element signature="e#1701#2306#0" />
+            <element signature="e#2319#5471#0" />
+            <element signature="e#5489#6525#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/shot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1729">
-          <caret line="138" column="22" lean-forward="true" selection-start-line="138" selection-start-column="22" selection-end-line="138" selection-end-column="22" />
+        <state relative-caret-position="641">
+          <caret line="143" column="33" selection-start-line="143" selection-start-column="33" selection-end-line="143" selection-end-column="33" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#156#1516#0" />
-            <element signature="e#167#187#0" />
+            <element signature="e#224#355#0" />
+            <element signature="e#374#1472#0" />
+            <element signature="e#1500#1520#0" />
+            <element signature="e#4098#4828#0" />
           </folding>
         </state>
       </provider>

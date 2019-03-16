@@ -10,43 +10,39 @@ size=[960,679]
 width = size[0]
 height = size[1]
 
-pl_x = 120
+pl_x = 100
 pl_y = 70
 
-en_x = 100
-en_y = 90
+en_x = 150
+en_y = 100
 
 def drawsc():
     SFont = pg.font.SysFont('monaco', 32)
     Ssurf = SFont.render("Score  :  {0}".format(sc), True, white)
 
     game.blit(Ssurf,(0,0))
+
 def crash():
     check = True
-
     while check:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 check = False
+                sys.exit()
+
         game.fill(black)
         endFont = pg.font.SysFont('times new roman', 72)
         reFont = pg.font.SysFont('monaco', 70)
 
         GOsurf = endFont.render("Game Over", True, red)
-        GOrect = GOsurf.get_rect()
-        GOrect.midtop = (width / 2, (height / 2) - 50)
-        game.blit(GOsurf, GOrect)
+        game.blit(GOsurf, ( (width / 2) - 150 , (height / 2) - 50) )
 
         Ssurf = endFont.render("Score  :  {0}".format(sc), True, red)
-        Srect = Ssurf.get_rect()
-        Srect.midtop = (width / 2, (height / 2) + 50)
-        game.blit(Ssurf, Srect)
+        game.blit(Ssurf, ( (width / 2) - 130 , (height / 2) + 50) )
 
         pg.draw.rect(game, white, pg.Rect((width / 2) - 60, (height / 2) + 150, 120, 50))
         text = reFont.render("RE?", True, black)
-        texts = text.get_rect()
-        texts.center = ((width / 2), (height / 2) + 180)
-        game.blit(text, texts)
+        game.blit(text, ( (width / 2)-45 , (height / 2)+155 ) )
 
         cur = pg.mouse.get_pos()
         click = pg.mouse.get_pressed()
@@ -63,24 +59,18 @@ def drawobj(obj,x,y):
 def run():
     global sc
     sc=0
-
-    check = True
-
     isShot = False
     isCon = 0
-
     x=0
     y=0
     y_ch = 0
-
     bullet_xy=[]
-
     back_x=0
     back_x2=width
-
     enemy_x=width
     enemy_y=random.randrange(0,height-en_y)
 
+    check = True
     while check:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -128,20 +118,23 @@ def run():
                         isShot = True
                 if bxy[0]>=width:
                     bullet_xy.remove(bxy)
+
         drawobj(backgr,back_x,0)
         drawobj(backgr2, back_x2, 0)
         drawsc()
         drawobj(player, x, y)
+
         if x+pl_x > enemy_x:
             if(y > enemy_y and y < enemy_y+en_y) or (y+pl_y > enemy_y and y+pl_y < enemy_y+en_y):
                 crash()
                 check = False
+
         if not isShot:
             drawobj(enemy,enemy_x,enemy_y)
         else:
             drawobj(boom,enemy_x,enemy_y)
             isCon+=1
-            if isCon > 7:
+            if isCon > 5:
                 isCon=0
                 enemy_x=width
                 enemy_y = random.randrange(0, height-en_y)
@@ -150,7 +143,7 @@ def run():
             for bx,by in bullet_xy:
                 drawobj(bullet,bx,by)
         pg.display.flip()
-        fps.tick(60)
+        fps.tick(30)
 
 def main():
     pg.init()

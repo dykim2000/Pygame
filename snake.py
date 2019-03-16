@@ -1,7 +1,6 @@
 import pygame as pg
 import sys
 import random
-import time
 
 red = (255, 0, 0)
 green = (0, 255, 0)
@@ -25,14 +24,16 @@ fd = 'song/end.mp3'
 fl = 'song/up.wav'
 
 def gameOver():
-    check =True
     pg.mixer.music.load(fd)
     pg.mixer.music.play()
+
+    check =True
     while check:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
+
         playSurface.fill(black)
         endFont = pg.font.SysFont('times new roman', 72)
         reFont = pg.font.SysFont('monaco', 70)
@@ -65,24 +66,19 @@ def gameOver():
 def showScore():
     SFont = pg.font.SysFont('monaco', 32)
     Ssurf = SFont.render("Score  :  {0}".format(score), True, black)
-    Srect = Ssurf.get_rect()
-    Srect.midtop = (80, 10)
-    playSurface.blit(Ssurf, Srect)
+    playSurface.blit(Ssurf, (0,0))
 
     UFont = pg.font.SysFont('monaco', 32)
     Usurf = UFont.render("Speed  :  {0}".format(speed), True, black)
-    Urect = Usurf.get_rect()
-    Urect.midtop = (80, 50)
-    playSurface.blit(Usurf, Urect)
+    playSurface.blit(Usurf, (0,50))
 
     PFont = pg.font.SysFont('monaco', 32)
     Psurf = PFont.render("Level :  {0}".format(level), True, black)
-    Prect = Psurf.get_rect()
-    Prect.midtop = (80, 90)
-    playSurface.blit(Psurf, Prect)
+    playSurface.blit(Psurf, (0,100))
 
 def inGame():
     pg.mixer.music.stop()
+
     check = True
     state = ''
     change = ''
@@ -194,26 +190,24 @@ def inGame():
 def main():
     pg.mixer.music.load(fm)
     pg.mixer.music.play()
+
     check = True
     while check:
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                pg.quit()
+                check = False
                 sys.exit()
+
         playSurface.fill(black)
         endFont = pg.font.SysFont('Stencil', 100)
         reFont = pg.font.SysFont('monaco', 50)
 
         GOsurf = endFont.render("SNAKE GAME", True, green)
-        GOrect = GOsurf.get_rect()
-        GOrect.midtop = (xx / 2, (yy / 2) - 50)
-        playSurface.blit(GOsurf, GOrect)
+        playSurface.blit(GOsurf, ( (xx / 2) - 250, (yy / 2) - 50))
 
         pg.draw.rect(playSurface, white, pg.Rect((xx / 2) - 60, (yy / 2) + 150, 120, 50))
         text = reFont.render("START", True, black)
-        texts = text.get_rect()
-        texts.center = ((xx / 2), (yy / 2) + 180)
-        playSurface.blit(text, texts)
+        playSurface.blit(text, ((xx / 2) - 55, (yy / 2) + 160))
 
         cur = pg.mouse.get_pos()
         click = pg.mouse.get_pressed()
