@@ -31,7 +31,7 @@ def gameOver():
     while check:
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                pg.quit()
+                check = False
                 sys.exit()
 
         playSurface.fill(black)
@@ -39,20 +39,14 @@ def gameOver():
         reFont = pg.font.SysFont('monaco', 70)
 
         GOsurf = endFont.render("Game Over", True, red)
-        GOrect = GOsurf.get_rect()
-        GOrect.midtop = (xx/2, (yy/2)-50)
-        playSurface.blit(GOsurf, GOrect)
+        playSurface.blit(GOsurf, ( (xx/2)-150, (yy/2)-50) )
 
         Ssurf = endFont.render("Score  :  {0}".format(score), True, red)
-        Srect = Ssurf.get_rect()
-        Srect.midtop = (xx/2, (yy/2)+50)
-        playSurface.blit(Ssurf, Srect)
+        playSurface.blit(Ssurf, ( (xx/2)-130, (yy/2)+50) )
 
         pg.draw.rect(playSurface,white,pg.Rect((xx/2)-60, (yy/2)+150, 120, 50))
         text=reFont.render("RE?",True,black)
-        texts=text.get_rect()
-        texts.center=((xx/2), (yy/2)+180)
-        playSurface.blit(text,texts)
+        playSurface.blit(text,( (xx/2)-45, (yy/2)+155) )
 
         cur = pg.mouse.get_pos()
         click = pg.mouse.get_pressed()
@@ -99,7 +93,7 @@ def inGame():
     while check:
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                pg.quit()
+                check = False
                 sys.exit()
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_RIGHT:

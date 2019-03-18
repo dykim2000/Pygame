@@ -10,11 +10,11 @@ size=[960,679]
 width = size[0]
 height = size[1]
 
-pl_x = 100
+pl_x = 130
 pl_y = 70
 
 en_x = 150
-en_y = 100
+en_y = 90
 
 def drawsc():
     SFont = pg.font.SysFont('monaco', 32)
@@ -156,13 +156,13 @@ def main():
     fps = pg.time.Clock()
 
     player = pg.image.load('img/plane.png')
-    player = pg.transform.scale(player,(100,70))
+    player = pg.transform.scale(player,(130,70))
     backgr = pg.image.load('img/sky.png')
     backgr2 = backgr.copy()
 
     enemy = pg.image.load('img/enemy.png')
     enemy = pg.transform.flip(enemy,1,0)
-    enemy= pg.transform.scale(enemy,(150, 100))
+    enemy= pg.transform.scale(enemy,(150, 90))
 
     bullet = pg.image.load('img/bullet.png')
     bullet = pg.transform.rotate(bullet,180)
