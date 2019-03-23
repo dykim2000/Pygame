@@ -1,41 +1,33 @@
 import pygame as pg
 import random, time, sys
 
+WHITE       = (255, 255, 255)
+BLACK       = (  0,   0,   0)
+RED         = (155,   0,   0)
+GREEN       = (  0, 155,   0)
+BLUE        = (  0,   0, 155)
+YELLOW      = (155, 155,   0)
+
 SIZE = [800,640]
 WIDTH = SIZE[0]
 HEIGHT = SIZE[1]
 
-BOXSIZE = 20
+BOXSIZE = 30
+BOXWIDTH = 5
+BOXHEIGHT = 5
 BOARDWIDTH = 10
-BOARDHEIGHT = 30
+BOARDHEIGHT = 20
 BLANK = '.'
+
+COLORS =(BLUE, GREEN, RED, YELLOW)
 
 MOVESIDEWAYSFREQ = 0.15
 MOVEDOWNFREQ = 0.1
 
-XMARGIN = int((WIDTH - BOARDWIDTH * BOXSIZE) / 2)
-TOPMARGIN = HEIGHT - (BOARDHEIGHT * BOXSIZE) - 5
+XMARGIN = (WIDTH - BOARDWIDTH * BOXSIZE) / 2
+YMARGIN = (HEIGHT -BOARDHEIGHT * BOXSIZE) - 5
 
-WHITE       = (255, 255, 255)
-GRAY        = (185, 185, 185)
-BLACK       = (  0,   0,   0)
-RED         = (155,   0,   0)
-LIGHTRED    = (175,  20,  20)
-GREEN       = (  0, 155,   0)
-LIGHTGREEN  = ( 20, 175,  20)
-BLUE        = (  0,   0, 155)
-LIGHTBLUE   = ( 20,  20, 175)
-YELLOW      = (155, 155,   0)
-LIGHTYELLOW = (175, 175,  20)
-
-COLORS      = (     BLUE,      GREEN,      RED,      YELLOW)
-LIGHTCOLORS = (LIGHTBLUE, LIGHTGREEN, LIGHTRED, LIGHTYELLOW)
-assert len(COLORS) == len(LIGHTCOLORS) # each color must have light color
-
-TEMPLATEWIDTH = 5
-TEMPLATEHEIGHT = 5
-
-S_SHAPE_TEMPLATE = [['.....',
+S = [['.....',
                      '.....',
                      '..OO.',
                      '.OO..',
@@ -46,7 +38,7 @@ S_SHAPE_TEMPLATE = [['.....',
                      '...O.',
                      '.....']]
 
-Z_SHAPE_TEMPLATE = [['.....',
+Z= [['.....',
                      '.....',
                      '.OO..',
                      '..OO.',
@@ -57,7 +49,7 @@ Z_SHAPE_TEMPLATE = [['.....',
                      '.O...',
                      '.....']]
 
-I_SHAPE_TEMPLATE = [['..O..',
+I = [['..O..',
                      '..O..',
                      '..O..',
                      '..O..',
@@ -68,13 +60,13 @@ I_SHAPE_TEMPLATE = [['..O..',
                      '.....',
                      '.....']]
 
-O_SHAPE_TEMPLATE = [['.....',
+O = [['.....',
                      '.....',
                      '.OO..',
                      '.OO..',
                      '.....']]
 
-J_SHAPE_TEMPLATE = [['.....',
+J = [['.....',
                      '.O...',
                      '.OOO.',
                      '.....',
@@ -95,7 +87,7 @@ J_SHAPE_TEMPLATE = [['.....',
                      '.OO..',
                      '.....']]
 
-L_SHAPE_TEMPLATE = [['.....',
+L = [['.....',
                      '...O.',
                      '.OOO.',
                      '.....',
@@ -116,7 +108,7 @@ L_SHAPE_TEMPLATE = [['.....',
                      '..O..',
                      '.....']]
 
-T_SHAPE_TEMPLATE = [['.....',
+T= [['.....',
                      '..O..',
                      '.OOO.',
                      '.....',
@@ -137,22 +129,21 @@ T_SHAPE_TEMPLATE = [['.....',
                      '..O..',
                      '.....']]
 
-PIECES = {'S': S_SHAPE_TEMPLATE,
-          'Z': Z_SHAPE_TEMPLATE,
-          'J': J_SHAPE_TEMPLATE,
-          'L': L_SHAPE_TEMPLATE,
-          'I': I_SHAPE_TEMPLATE,
-          'O': O_SHAPE_TEMPLATE,
-          'T': T_SHAPE_TEMPLATE}
-
+PIECES = {'S': S,
+          'Z': Z,
+          'J': J,
+          'L': L,
+          'I': I,
+          'O': O,
+          'T': T}
 
 def main():
     global FPS, GAME
 
     pg.init()
-    FPS = pg.time.Clock()
     GAME = pg.display.set_mode(SIZE)
     pg.display.set_caption('Tetris')
+    FPS = pg.time.Clock()
 
     check = True
     while check:
@@ -163,6 +154,7 @@ def main():
 
         GAME.fill(BLACK)
         TFont = pg.font.SysFont('Stencil', 100)
+        global MFont
         MFont = pg.font.SysFont('monaco', 50)
 
         GOsurf = TFont.render("Tetris", True, GREEN)
@@ -182,18 +174,18 @@ def main():
                 check = False
         pg.display.flip()
 
-
 def runGame():
-
     board = getBlankBoard()
     lastMoveDownTime = time.time()
     lastMoveSidewaysTime = time.time()
     lastFallTime = time.time()
+
     movingDown = False
     movingLeft = False
     movingRight = False
+
     score = 0
-    level, fallFreq = calculateLevelAndFallFreq(score)
+    level, fallsp = ingamesp(score)
 
     fallingPiece = getNewPiece()
     nextPiece = getNewPiece()
@@ -201,13 +193,13 @@ def runGame():
     check = True
     while check:
         if fallingPiece == None:
-            # No falling piece in play, so start a new piece at the top
             fallingPiece = nextPiece
             nextPiece = getNewPiece()
-            lastFallTime = time.time() # reset lastFallTime
+            lastFallTime = time.time()
 
-            if not isValidPosition(board, fallingPiece):
-                return # can't fit a new piece on the board, so game over
+            if not CHpiece(board, fallingPiece):
+                print('Game Over')
+                return
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -223,12 +215,12 @@ def runGame():
                     movingDown = False
 
             elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_LEFT and isValidPosition(board, fallingPiece, adjX=-1):
+                if event.key == pg.K_LEFT and CHpiece(board, fallingPiece, X=-1):
                     fallingPiece['x'] -= 1
                     movingLeft = True
                     movingRight = False
                     lastMoveSidewaysTime = time.time()
-                elif event.key == pg.K_RIGHT and isValidPosition(board, fallingPiece, adjX=1):
+                elif event.key == pg.K_RIGHT and CHpiece(board, fallingPiece, X=1):
                     fallingPiece['x'] += 1
                     movingRight = True
                     movingLeft = False
@@ -236,51 +228,46 @@ def runGame():
 
                 elif event.key == pg.K_UP:
                     fallingPiece['rotation'] = (fallingPiece['rotation'] + 1) % len(PIECES[fallingPiece['shape']])
-                    if not isValidPosition(board, fallingPiece):
+                    if not CHpiece(board, fallingPiece):
                         fallingPiece['rotation'] = (fallingPiece['rotation'] - 1) % len(PIECES[fallingPiece['shape']])
                 elif event.key == pg.K_DOWN:
                     movingDown = True
-                    if isValidPosition(board, fallingPiece, adjY=1):
+                    if CHpiece(board, fallingPiece, Y=1):
                         fallingPiece['y'] += 1
                     lastMoveDownTime = time.time()
-
-                # move the current piece all the way down
                 elif event.key == pg.K_SPACE:
                     movingDown = False
                     movingLeft = False
                     movingRight = False
                     for i in range(1, BOARDHEIGHT):
-                        if not isValidPosition(board, fallingPiece, adjY=i):
+                        if not CHpiece(board, fallingPiece, Y=i):
                             break
                     fallingPiece['y'] += i - 1
 
-        # handle moving the piece because of user input
         if (movingLeft or movingRight) and time.time() - lastMoveSidewaysTime > MOVESIDEWAYSFREQ:
-            if movingLeft and isValidPosition(board, fallingPiece, adjX=-1):
+            if movingLeft and CHpiece(board, fallingPiece, X=-1):
                 fallingPiece['x'] -= 1
-            elif movingRight and isValidPosition(board, fallingPiece, adjX=1):
+            elif movingRight and CHpiece(board, fallingPiece, X=1):
                 fallingPiece['x'] += 1
             lastMoveSidewaysTime = time.time()
 
-        if movingDown and time.time() - lastMoveDownTime > MOVEDOWNFREQ and isValidPosition(board, fallingPiece, adjY=1):
+        if movingDown and time.time() - lastMoveDownTime > MOVEDOWNFREQ and CHpiece(board, fallingPiece, Y=1):
             fallingPiece['y'] += 1
             lastMoveDownTime = time.time()
 
-        # let the piece fall if it is time to fall
-        if time.time() - lastFallTime > fallFreq:
+        if time.time() - lastFallTime > fallsp:
             # see if the piece has landed
-            if not isValidPosition(board, fallingPiece, adjY=1):
+            if not CHpiece(board, fallingPiece, Y=1):
                 # falling piece has landed, set it on the board
                 addToBoard(board, fallingPiece)
                 score += removeCompleteLines(board)
-                level, fallFreq = calculateLevelAndFallFreq(score)
+                level, fallsp = ingamesp(score)
                 fallingPiece = None
             else:
                 # piece did not land, just move the piece down
                 fallingPiece['y'] += 1
                 lastFallTime = time.time()
 
-        # drawing everything on the screen
         GAME.fill(BLACK)
         drawBoard(board)
         drawStatus(score, level)
@@ -291,72 +278,97 @@ def runGame():
         pg.display.flip()
         FPS.tick(30)
 
-def calculateLevelAndFallFreq(score):
-    # Based on the score, return the level the player is on and
-    # how many seconds pass until a falling piece falls one space.
-    level = int(score / 10) + 1
-    fallFreq = 0.27 - (level * 0.02)
-    return level, fallFreq
+def ingamesp(score):
+    level = int(score / 3) + 1
+    fallsp = 0.6 -(level*0.1)+0.1
+    return level, fallsp
 
 def getNewPiece():
-    # return a random new piece in a random rotation and color
     shape = random.choice(list(PIECES.keys()))
     newPiece = {'shape': shape,
                 'rotation': random.randint(0, len(PIECES[shape]) - 1),
-                'x': int(BOARDWIDTH / 2) - int(TEMPLATEWIDTH / 2),
-                'y': -2, # start it above the board (i.e. less than 0)
+                'x': int(BOARDWIDTH / 2) - int(BOXWIDTH / 2),
+                'y': -2,
                 'color': random.randint(0, len(COLORS)-1)}
     return newPiece
 
+def drawBoard(board):
+    pg.draw.rect(GAME, BLUE, (XMARGIN - 3, YMARGIN - 7, (BOARDWIDTH * BOXSIZE) + 8, (BOARDHEIGHT * BOXSIZE) + 8), 5)
+    pg.draw.rect(GAME, BLACK, (XMARGIN, YMARGIN, BOXSIZE * BOARDWIDTH, BOXSIZE * BOARDHEIGHT))
+
+    for x in range(BOARDWIDTH):
+        for y in range(BOARDHEIGHT):
+            drawBox(x, y, board[x][y])
+
+def drawStatus(score, level):
+    scoreSurf = MFont.render('Score: %s' % score, True, WHITE)
+    GAME.blit(scoreSurf, (WIDTH - 150, 20))
+
+    levelSurf = MFont.render('Level: %s' % level, True, WHITE)
+    GAME.blit(levelSurf, (WIDTH - 150, 60))
+
+def drawNextPiece(piece):
+    MFont = pg.font.SysFont('monaco', 50)
+    nextSurf = MFont.render('Next:', True, WHITE)
+    GAME.blit(nextSurf, (WIDTH - 120, 100))
+    drawPiece(piece, pixelx=WIDTH-120, pixely=150)
+
+def drawPiece(piece, pixelx=None, pixely=None):
+    shapeToDraw = PIECES[piece['shape']][piece['rotation']]
+    if pixelx == None and pixely == None:
+        pixelx, pixely = convertToPixelCoords(piece['x'], piece['y'])
+
+    for x in range(BOXWIDTH):
+        for y in range(BOXHEIGHT):
+            if shapeToDraw[y][x] != BLANK:
+                drawBox(None, None, piece['color'], pixelx + (x * BOXSIZE), pixely + (y * BOXSIZE))
+
+def drawBox(boxx, boxy, color, pixelx=None, pixely=None):
+    if color == BLANK:
+        return
+    if pixelx == None and pixely == None:
+        pixelx, pixely = convertToPixelCoords(boxx, boxy)
+    pg.draw.rect(GAME, COLORS[color], (pixelx + 1, pixely + 1, BOXSIZE - 1, BOXSIZE - 1))
 
 def addToBoard(board, piece):
     # fill in the board based on piece's location, shape, and rotation
-    for x in range(TEMPLATEWIDTH):
-        for y in range(TEMPLATEHEIGHT):
+    for x in range(BOXWIDTH):
+        for y in range(BOXHEIGHT):
             if PIECES[piece['shape']][piece['rotation']][y][x] != BLANK:
                 board[x + piece['x']][y + piece['y']] = piece['color']
 
-
 def getBlankBoard():
-    # create and return a new blank board data structure
     board = []
     for i in range(BOARDWIDTH):
         board.append([BLANK] * BOARDHEIGHT)
     return board
 
-
 def isOnBoard(x, y):
     return x >= 0 and x < BOARDWIDTH and y < BOARDHEIGHT
 
-
-def isValidPosition(board, piece, adjX=0, adjY=0):
-    # Return True if the piece is within the board and not colliding
-    for x in range(TEMPLATEWIDTH):
-        for y in range(TEMPLATEHEIGHT):
-            isAboveBoard = y + piece['y'] + adjY < 0
+def CHpiece(board, piece, X=0, Y=0):
+    for x in range(BOXWIDTH):
+        for y in range(BOXHEIGHT):
+            isAboveBoard = y + piece['y'] + Y < 0
             if isAboveBoard or PIECES[piece['shape']][piece['rotation']][y][x] == BLANK:
                 continue
-            if not isOnBoard(x + piece['x'] + adjX, y + piece['y'] + adjY):
+            if not isOnBoard(x + piece['x'] + X, y + piece['y'] + Y):
                 return False
-            if board[x + piece['x'] + adjX][y + piece['y'] + adjY] != BLANK:
+            if board[x + piece['x'] + X][y + piece['y'] + Y] != BLANK:
                 return False
     return True
 
 def isCompleteLine(board, y):
-    # Return True if the line filled with boxes with no gaps.
     for x in range(BOARDWIDTH):
         if board[x][y] == BLANK:
             return False
     return True
 
-
 def removeCompleteLines(board):
-    # Remove any completed lines on the board, move everything above them down, and return the number of complete lines.
     numLinesRemoved = 0
-    y = BOARDHEIGHT - 1 # start y at the bottom of the board
+    y = BOARDHEIGHT - 1
     while y >= 0:
         if isCompleteLine(board, y):
-            # Remove the line and pull boxes down by one line.
             for pullDownY in range(y, 0, -1):
                 for x in range(BOARDWIDTH):
                     board[x][pullDownY] = board[x][pullDownY-1]
@@ -364,75 +376,11 @@ def removeCompleteLines(board):
             for x in range(BOARDWIDTH):
                 board[x][0] = BLANK
             numLinesRemoved += 1
-            # Note on the next iteration of the loop, y is the same.
-            # This is so that if the line that was pulled down is also
-            # complete, it will be removed.
         else:
-            y -= 1 # move on to check next row up
+            y -= 1
     return numLinesRemoved
 
-
 def convertToPixelCoords(boxx, boxy):
-    # Convert the given xy coordinates of the board to xy
-    # coordinates of the location on the screen.
-    return (XMARGIN + (boxx * BOXSIZE)), (TOPMARGIN + (boxy * BOXSIZE))
-
-
-def drawBox(boxx, boxy, color, pixelx=None, pixely=None):
-    # draw a single box (each tetromino piece has four boxes)
-    # at xy coordinates on the board. Or, if pixelx & pixely
-    # are specified, draw to the pixel coordinates stored in
-    # pixelx & pixely (this is used for the "Next" piece).
-    if color == BLANK:
-        return
-    if pixelx == None and pixely == None:
-        pixelx, pixely = convertToPixelCoords(boxx, boxy)
-    pg.draw.rect(GAME, COLORS[color], (pixelx + 1, pixely + 1, BOXSIZE - 1, BOXSIZE - 1))
-    pg.draw.rect(GAME, LIGHTCOLORS[color], (pixelx + 1, pixely + 1, BOXSIZE - 4, BOXSIZE - 4))
-
-
-def drawBoard(board):
-    # draw the border around the board
-    pg.draw.rect(GAME, BLUE, (XMARGIN - 3, TOPMARGIN - 7, (BOARDWIDTH * BOXSIZE) + 8, (BOARDHEIGHT * BOXSIZE) + 8), 5)
-
-    # fill the background of the board
-    pg.draw.rect(GAME, BLACK, (XMARGIN, TOPMARGIN, BOXSIZE * BOARDWIDTH, BOXSIZE * BOARDHEIGHT))
-    # draw the individual boxes on the board
-    for x in range(BOARDWIDTH):
-        for y in range(BOARDHEIGHT):
-            drawBox(x, y, board[x][y])
-
-
-def drawStatus(score, level):
-    MFont = pg.font.SysFont('monaco', 50)
-    # draw the score text
-    scoreSurf = MFont.render('Score: %s' % score, True, WHITE)
-    GAME.blit(scoreSurf, (WIDTH - 150, 20))
-
-    # draw the level text
-    levelSurf = MFont.render('Level: %s' % level, True, WHITE)
-    GAME.blit(levelSurf, (WIDTH - 150, 60))
-
-
-def drawPiece(piece, pixelx=None, pixely=None):
-    shapeToDraw = PIECES[piece['shape']][piece['rotation']]
-    if pixelx == None and pixely == None:
-        # if pixelx & pixely hasn't been specified, use the location stored in the piece data structure
-        pixelx, pixely = convertToPixelCoords(piece['x'], piece['y'])
-
-    # draw each of the boxes that make up the piece
-    for x in range(TEMPLATEWIDTH):
-        for y in range(TEMPLATEHEIGHT):
-            if shapeToDraw[y][x] != BLANK:
-                drawBox(None, None, piece['color'], pixelx + (x * BOXSIZE), pixely + (y * BOXSIZE))
-
-
-def drawNextPiece(piece):
-    # draw the "next" text
-    MFont = pg.font.SysFont('monaco', 50)
-    nextSurf = MFont.render('Next:', True, WHITE)
-    GAME.blit(nextSurf, (WIDTH - 120, 100))
-    # draw the "next" piece
-    drawPiece(piece, pixelx=WIDTH-120, pixely=150)
+    return (XMARGIN + (boxx * BOXSIZE)), (YMARGIN + (boxy * BOXSIZE))
 
 main()
