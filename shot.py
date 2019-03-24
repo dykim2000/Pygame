@@ -57,26 +57,31 @@ def drawobj(obj,x,y):
     game.blit(obj,(x,y))
 
 def run():
-    global sc
+    global sc #스코어
     sc=0
-    isShot = False
-    isCon = 0
+    isShot = False #타격 판정
+    isCon = 0 #이펙트 유지 시간
+
     x=0
     y=0
-    y_ch = 0
-    bullet_xy=[]
+    y_ch = 0 #플레이어 x,y 좌표 및 y좌표 갱신
+
+    bullet_xy=[] #총알 x,y 좌표 배열
+
     back_x=0
-    back_x2=width
+    back_x2=width #백그라운드 x좌표
+
     enemy_x=width
-    enemy_y=random.randrange(0,height-en_y)
+    enemy_y=random.randrange(0,height-en_y) #적 x,y 좌표
 
     check = True
     while check:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 check = False
+                sys.exit()
 
-            if event.type == pg.KEYDOWN:
+            if event.type == pg.KEYDOWN: #키가 눌렸을 때
                 if event.key == pg.K_UP:
                     y_ch = -15
                 elif event.key == pg.K_DOWN:
@@ -86,7 +91,7 @@ def run():
                     bullet_y = y+pl_y/2
                     bullet_xy.append([bullet_x, bullet_y])
 
-            if event.type == pg.KEYUP:
+            if event.type == pg.KEYUP: # 키를 땠을 때
                 if event.key == pg.K_UP or event.key == pg.K_DOWN:
                     y_ch = 0
         y+=y_ch
@@ -151,21 +156,22 @@ def main():
     global player,backgr,backgr2
     global enemy,bullet,boom
 
-    game = pg.display.set_mode((size))
-    pg.display.set_caption('Shooting')
-    fps = pg.time.Clock()
+    game = pg.display.set_mode((size)) #디스플레이 옵션
+    pg.display.set_caption('Shooting') #제목
+    fps = pg.time.Clock() #프레임
 
     player = pg.image.load('img/plane.png')
-    player = pg.transform.scale(player,(130,70))
+    player = pg.transform.scale(player,(130,70)) #크기
+
     backgr = pg.image.load('img/sky.png')
     backgr2 = backgr.copy()
 
     enemy = pg.image.load('img/enemy.png')
-    enemy = pg.transform.flip(enemy,1,0)
+    enemy = pg.transform.flip(enemy,1,0) #반전
     enemy= pg.transform.scale(enemy,(150, 90))
 
     bullet = pg.image.load('img/bullet.png')
-    bullet = pg.transform.rotate(bullet,180)
+    bullet = pg.transform.rotate(bullet,180) #회전
     bullet = pg.transform.scale(bullet, (50,10))
 
     boom = pg.image.load('img/boom.png')

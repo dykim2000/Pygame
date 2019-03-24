@@ -29,7 +29,7 @@ YMARGIN = (HEIGHT -BOARDHEIGHT * BOXSIZE) - 5
 
 S = [['.....',
                      '.....',
-                     '..OO.',
+                     '..0O.',
                      '.OO..',
                      '.....'],
                     ['.....',
