@@ -52,10 +52,16 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tetris.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="532">
-              <caret line="319" lean-forward="true" selection-start-line="319" selection-end-line="319" />
+            <state relative-caret-position="1021">
+              <caret line="303" column="7" selection-start-line="303" selection-start-column="7" selection-end-line="303" selection-end-column="7" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#692#821#0" />
+                <element signature="e#3448#4583#0" />
+                <element signature="e#8288#8391#0" />
+                <element signature="e#8594#8701#0" />
+                <element signature="e#8607#8918#0" />
+                <element signature="e#9862#10072#0" />
               </folding>
             </state>
           </provider>
@@ -64,8 +70,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tt.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6289">
-              <caret line="332" column="36" selection-start-line="332" selection-start-column="36" selection-end-line="332" selection-end-column="36" />
+            <state relative-caret-position="147">
+              <caret line="357" column="66" lean-forward="true" selection-start-line="357" selection-start-column="66" selection-end-line="357" selection-end-column="66" />
               <folding>
                 <element signature="e#152#184#0" expanded="true" />
               </folding>
@@ -103,13 +109,13 @@
         <option value="$PROJECT_DIR$/sample.py" />
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/snake.py" />
-        <option value="$PROJECT_DIR$/tt.py" />
         <option value="$PROJECT_DIR$/shot.py" />
+        <option value="$PROJECT_DIR$/tt.py" />
         <option value="$PROJECT_DIR$/tetris.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="953" />
     <option name="width" value="974" />
     <option name="height" value="1047" />
@@ -280,10 +286,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.tetris" />
+        <item itemvalue="Python.tt" />
         <item itemvalue="Python.shot" />
         <item itemvalue="Python.snake" />
         <item itemvalue="Python.sample" />
-        <item itemvalue="Python.tt" />
       </list>
     </recent_temporary>
   </component>
@@ -301,10 +307,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17913593" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2081138" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -434,8 +440,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tt.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6289">
-          <caret line="332" column="36" selection-start-line="332" selection-start-column="36" selection-end-line="332" selection-end-column="36" />
+        <state relative-caret-position="147">
+          <caret line="357" column="66" lean-forward="true" selection-start-line="357" selection-start-column="66" selection-end-line="357" selection-end-column="66" />
           <folding>
             <element signature="e#152#184#0" expanded="true" />
           </folding>
@@ -444,10 +450,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tetris.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="532">
-          <caret line="319" lean-forward="true" selection-start-line="319" selection-end-line="319" />
+        <state relative-caret-position="1021">
+          <caret line="303" column="7" selection-start-line="303" selection-start-column="7" selection-end-line="303" selection-end-column="7" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#692#821#0" />
+            <element signature="e#3448#4583#0" />
+            <element signature="e#8288#8391#0" />
+            <element signature="e#8594#8701#0" />
+            <element signature="e#8607#8918#0" />
+            <element signature="e#9862#10072#0" />
           </folding>
         </state>
       </provider>

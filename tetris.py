@@ -12,17 +12,17 @@ SIZE = [800,640]
 WIDTH = SIZE[0]
 HEIGHT = SIZE[1]
 
+# 블럭 디자인 값
 BOXSIZE = 30
 BOXWIDTH = 5
 BOXHEIGHT = 5
+
+# 보드 디자인 값
 BOARDWIDTH = 10
 BOARDHEIGHT = 20
 BLANK = '.'
 
 COLORS =(BLUE, GREEN, RED, YELLOW)
-
-MOVESIDEWAYSFREQ = 0.15
-MOVEDOWNFREQ = 0.1
 
 XMARGIN = (WIDTH - BOARDWIDTH * BOXSIZE) / 2
 YMARGIN = (HEIGHT -BOARDHEIGHT * BOXSIZE) - 5
@@ -152,47 +152,46 @@ def main():
                 check = False
                 sys.exit()
 
-        GAME.fill(BLACK)
-        TFont = pg.font.SysFont('Stencil', 100)
-        global MFont
-        MFont = pg.font.SysFont('monaco', 50)
-
+        GAME.fill(BLACK) # 검은색 배경
+        TFont = pg.font.SysFont('Stencil', 100) # 타이틀 폰트
         GOsurf = TFont.render("Tetris", True, GREEN)
         GAME.blit(GOsurf, ((WIDTH / 2) - 150, (HEIGHT / 2) - 50))
 
-        pg.draw.rect(GAME, WHITE, pg.Rect((WIDTH / 2) - 60, (HEIGHT / 2) + 150, 120, 50))
-        text = MFont.render("START", True, BLACK)
+        global MFont # 메인 폰트
+        MFont = pg.font.SysFont('monaco', 50)
+
+        pg.draw.rect(GAME, WHITE, pg.Rect((WIDTH / 2) - 60, (HEIGHT / 2) + 150, 120, 50)) # 버튼 디자인
+        text = MFont.render("START", True, BLACK) # 버튼 글자
         GAME.blit(text, ((WIDTH / 2) - 55, (HEIGHT / 2) + 160))
 
-        cur = pg.mouse.get_pos()
-        click = pg.mouse.get_pressed()
+        cur = pg.mouse.get_pos() # 커서 위치
+        click = pg.mouse.get_pressed() # 마우스 클릭
         if ((WIDTH / 2) - 60) + 120 > cur[0] > (WIDTH / 2) - 60 and ((HEIGHT / 2) + 150) + 50 > cur[1] > (HEIGHT / 2) + 150:
-            print('버튼 포인트')
             if (click[0] == 1):
-                print('버튼 클릭')
                 runGame()
                 check = False
         pg.display.flip()
 
 def runGame():
-    board = getBlankBoard()
-    lastMoveDownTime = time.time()
-    lastMoveSidewaysTime = time.time()
+    board = getBlankBoard() #보드 디자인
+
     lastFallTime = time.time()
 
+    # 키 값 컨트롤
     movingDown = False
     movingLeft = False
     movingRight = False
 
     score = 0
-    level, fallsp = ingamesp(score)
+    level, fallsp = ingamesp(score) # 게임 레벨 과 블럭 떨어지는 속도 지정
 
+    # 떨어지는 블럭 과 다음 블럭 디자인
     fallingPiece = getNewPiece()
     nextPiece = getNewPiece()
 
     check = True
     while check:
-        if fallingPiece == None:
+        if fallingPiece == None: # 떨어지는 블럭이 없다면 재갱신
             fallingPiece = nextPiece
             nextPiece = getNewPiece()
             lastFallTime = time.time()
@@ -206,7 +205,7 @@ def runGame():
                 check = False
                 sys.exit()
 
-            if event.type == pg.KEYUP:
+            if event.type == pg.KEYUP: # 키 입력이 풀렸을때
                 if event.key == pg.K_LEFT:
                     movingLeft = False
                 elif event.key == pg.K_RIGHT:
@@ -214,18 +213,15 @@ def runGame():
                 elif event.key == pg.K_DOWN:
                     movingDown = False
 
-            elif event.type == pg.KEYDOWN:
+            elif event.type == pg.KEYDOWN: # 키 입력일때
                 if event.key == pg.K_LEFT and CHpiece(board, fallingPiece, X=-1):
                     fallingPiece['x'] -= 1
                     movingLeft = True
                     movingRight = False
-                    lastMoveSidewaysTime = time.time()
                 elif event.key == pg.K_RIGHT and CHpiece(board, fallingPiece, X=1):
                     fallingPiece['x'] += 1
                     movingRight = True
                     movingLeft = False
-                    lastMoveSidewaysTime = time.time()
-
                 elif event.key == pg.K_UP:
                     fallingPiece['rotation'] = (fallingPiece['rotation'] + 1) % len(PIECES[fallingPiece['shape']])
                     if not CHpiece(board, fallingPiece):
@@ -234,7 +230,6 @@ def runGame():
                     movingDown = True
                     if CHpiece(board, fallingPiece, Y=1):
                         fallingPiece['y'] += 1
-                    lastMoveDownTime = time.time()
                 elif event.key == pg.K_SPACE:
                     movingDown = False
                     movingLeft = False
@@ -243,17 +238,6 @@ def runGame():
                         if not CHpiece(board, fallingPiece, Y=i):
                             break
                     fallingPiece['y'] += i - 1
-
-        if (movingLeft or movingRight) and time.time() - lastMoveSidewaysTime > MOVESIDEWAYSFREQ:
-            if movingLeft and CHpiece(board, fallingPiece, X=-1):
-                fallingPiece['x'] -= 1
-            elif movingRight and CHpiece(board, fallingPiece, X=1):
-                fallingPiece['x'] += 1
-            lastMoveSidewaysTime = time.time()
-
-        if movingDown and time.time() - lastMoveDownTime > MOVEDOWNFREQ and CHpiece(board, fallingPiece, Y=1):
-            fallingPiece['y'] += 1
-            lastMoveDownTime = time.time()
 
         if time.time() - lastFallTime > fallsp:
             # see if the piece has landed
@@ -278,13 +262,31 @@ def runGame():
         pg.display.flip()
         FPS.tick(30)
 
+def CHpiece(board, piece, X=0, Y=0):
+    for x in range(BOXWIDTH):
+        for y in range(BOXHEIGHT):
+            isAboveBoard = y + piece['y'] + Y < 0
+            if isAboveBoard or PIECES[piece['shape']][piece['rotation']][y][x] == BLANK:
+                continue
+            if not isOnBoard(x + piece['x'] + X, y + piece['y'] + Y):
+                return False
+            if board[x + piece['x'] + X][y + piece['y'] + Y] != BLANK:
+                return False
+    return True
+
+def getBlankBoard():
+    board = []
+    for i in range(BOARDWIDTH):
+        board.append([BLANK] * BOARDHEIGHT)
+    return board
+
 def ingamesp(score):
-    level = int(score / 3) + 1
-    fallsp = 0.6 -(level*0.1)+0.1
+    level = int(score / 3) + 1 # 3배수 단위
+    fallsp = 0.6 -(level*0.1)+0.1 # 0.6 값으로 시작
     return level, fallsp
 
 def getNewPiece():
-    shape = random.choice(list(PIECES.keys()))
+    shape = random.choice(list(PIECES.keys())) # 블럭 타입 랜덤 지정
     newPiece = {'shape': shape,
                 'rotation': random.randint(0, len(PIECES[shape]) - 1),
                 'x': int(BOARDWIDTH / 2) - int(BOXWIDTH / 2),
@@ -294,7 +296,6 @@ def getNewPiece():
 
 def drawBoard(board):
     pg.draw.rect(GAME, BLUE, (XMARGIN - 3, YMARGIN - 7, (BOARDWIDTH * BOXSIZE) + 8, (BOARDHEIGHT * BOXSIZE) + 8), 5)
-    pg.draw.rect(GAME, BLACK, (XMARGIN, YMARGIN, BOXSIZE * BOARDWIDTH, BOXSIZE * BOARDHEIGHT))
 
     for x in range(BOARDWIDTH):
         for y in range(BOARDHEIGHT):
@@ -337,32 +338,9 @@ def addToBoard(board, piece):
             if PIECES[piece['shape']][piece['rotation']][y][x] != BLANK:
                 board[x + piece['x']][y + piece['y']] = piece['color']
 
-def getBlankBoard():
-    board = []
-    for i in range(BOARDWIDTH):
-        board.append([BLANK] * BOARDHEIGHT)
-    return board
-
 def isOnBoard(x, y):
     return x >= 0 and x < BOARDWIDTH and y < BOARDHEIGHT
 
-def CHpiece(board, piece, X=0, Y=0):
-    for x in range(BOXWIDTH):
-        for y in range(BOXHEIGHT):
-            isAboveBoard = y + piece['y'] + Y < 0
-            if isAboveBoard or PIECES[piece['shape']][piece['rotation']][y][x] == BLANK:
-                continue
-            if not isOnBoard(x + piece['x'] + X, y + piece['y'] + Y):
-                return False
-            if board[x + piece['x'] + X][y + piece['y'] + Y] != BLANK:
-                return False
-    return True
-
-def isCompleteLine(board, y):
-    for x in range(BOARDWIDTH):
-        if board[x][y] == BLANK:
-            return False
-    return True
 
 def removeCompleteLines(board):
     numLinesRemoved = 0
@@ -379,6 +357,12 @@ def removeCompleteLines(board):
         else:
             y -= 1
     return numLinesRemoved
+
+def isCompleteLine(board, y):
+    for x in range(BOARDWIDTH):
+        if board[x][y] == BLANK:
+            return False
+    return True
 
 def convertToPixelCoords(boxx, boxy):
     return (XMARGIN + (boxx * BOXSIZE)), (YMARGIN + (boxy * BOXSIZE))
