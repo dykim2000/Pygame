@@ -137,6 +137,37 @@ PIECES = {'S': S,
           'O': O,
           'T': T}
 
+def end(sc):
+    check = True
+    while check:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                check = False
+                sys.exit()
+
+        GAME.fill(BLACK)
+        endFont = pg.font.SysFont('times new roman', 72)
+        reFont = pg.font.SysFont('monaco', 70)
+
+        GOsurf = endFont.render("Game Over", True, RED)
+        GAME.blit(GOsurf, ( (WIDTH/ 2) - 150 , (HEIGHT / 2) - 50) )
+
+        Ssurf = endFont.render("Score  :  {0}".format(sc), True, RED)
+        GAME.blit(Ssurf, ( (WIDTH / 2) - 130 , (HEIGHT / 2) + 50) )
+
+        pg.draw.rect(GAME, WHITE, pg.Rect((WIDTH / 2) - 60, (HEIGHT / 2) + 150, 120, 50))
+        text = reFont.render("RE?", True, BLACK)
+        GAME.blit(text, ( (WIDTH / 2)-45 , (HEIGHT / 2)+155 ) )
+
+        cur = pg.mouse.get_pos()
+        click = pg.mouse.get_pressed()
+        if ((WIDTH / 2) - 60) + 120 > cur[0] > (WIDTH/ 2) - 60 and ((HEIGHT / 2) + 150) + 50 > cur[1] > (HEIGHT / 2) + 150:
+            print('버튼 포인트')
+            if (click[0] == 1):
+                print('버튼 클릭')
+                runGame()
+        pg.display.flip()
+
 def main():
     global FPS, GAME
 
@@ -177,15 +208,10 @@ def runGame():
 
     lastFallTime = time.time()
 
-    # 키 값 컨트롤
-    movingDown = False
-    movingLeft = False
-    movingRight = False
-
     score = 0
     level, fallsp = ingamesp(score) # 게임 레벨 과 블럭 떨어지는 속도 지정
 
-    # 떨어지는 블럭 과 다음 블럭 디자인
+    # 떨어지는 블럭 과 다음 블럭 지정
     fallingPiece = getNewPiece()
     nextPiece = getNewPiece()
 
@@ -197,47 +223,31 @@ def runGame():
             lastFallTime = time.time()
 
             if not CHpiece(board, fallingPiece):
-                print('Game Over')
-                return
+                end(score)
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 check = False
                 sys.exit()
 
-            if event.type == pg.KEYUP: # 키 입력이 풀렸을때
-                if event.key == pg.K_LEFT:
-                    movingLeft = False
-                elif event.key == pg.K_RIGHT:
-                    movingRight = False
-                elif event.key == pg.K_DOWN:
-                    movingDown = False
-
-            elif event.type == pg.KEYDOWN: # 키 입력일때
+            elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_LEFT and CHpiece(board, fallingPiece, X=-1):
                     fallingPiece['x'] -= 1
-                    movingLeft = True
-                    movingRight = False
                 elif event.key == pg.K_RIGHT and CHpiece(board, fallingPiece, X=1):
                     fallingPiece['x'] += 1
-                    movingRight = True
-                    movingLeft = False
+                elif event.key == pg.K_DOWN:
+                    if CHpiece(board, fallingPiece, Y=1):
+                        fallingPiece['y'] += 1
+                elif event.key == pg.K_SPACE:
+                    for i in range(BOARDHEIGHT):
+                        if not CHpiece(board, fallingPiece, Y=i):
+                            break
+                    fallingPiece['y'] += i - 1
                 elif event.key == pg.K_UP:
                     fallingPiece['rotation'] = (fallingPiece['rotation'] + 1) % len(PIECES[fallingPiece['shape']])
                     if not CHpiece(board, fallingPiece):
                         fallingPiece['rotation'] = (fallingPiece['rotation'] - 1) % len(PIECES[fallingPiece['shape']])
-                elif event.key == pg.K_DOWN:
-                    movingDown = True
-                    if CHpiece(board, fallingPiece, Y=1):
-                        fallingPiece['y'] += 1
-                elif event.key == pg.K_SPACE:
-                    movingDown = False
-                    movingLeft = False
-                    movingRight = False
-                    for i in range(1, BOARDHEIGHT):
-                        if not CHpiece(board, fallingPiece, Y=i):
-                            break
-                    fallingPiece['y'] += i - 1
+
 
         if time.time() - lastFallTime > fallsp:
             # see if the piece has landed
@@ -265,12 +275,12 @@ def runGame():
 def CHpiece(board, piece, X=0, Y=0):
     for x in range(BOXWIDTH):
         for y in range(BOXHEIGHT):
-            isAboveBoard = y + piece['y'] + Y < 0
-            if isAboveBoard or PIECES[piece['shape']][piece['rotation']][y][x] == BLANK:
+            ispiece = y + piece['y'] + Y < 0
+            if ispiece or PIECES[piece['shape']][piece['rotation']][y][x] == BLANK: # 블럭의 Y값 혹은 보드 안에 있을 경우
                 continue
-            if not isOnBoard(x + piece['x'] + X, y + piece['y'] + Y):
+            if not isOnBoard(x + piece['x'] + X, y + piece['y'] + Y): # 보드 안에 블럭 상속
                 return False
-            if board[x + piece['x'] + X][y + piece['y'] + Y] != BLANK:
+            if board[x + piece['x'] + X][y + piece['y'] + Y] != BLANK: # 블럭 쌓기
                 return False
     return True
 
@@ -281,8 +291,12 @@ def getBlankBoard():
     return board
 
 def ingamesp(score):
-    level = int(score / 3) + 1 # 3배수 단위
-    fallsp = 0.6 -(level*0.1)+0.1 # 0.6 값으로 시작
+    level = int(score/3) + 1 # 3배수 단위
+    if level < 6:
+        fallsp = 0.6 -(level*0.1)+0.1
+    else:
+        fallsp = 0.1
+
     return level, fallsp
 
 def getNewPiece():
@@ -294,13 +308,6 @@ def getNewPiece():
                 'color': random.randint(0, len(COLORS)-1)}
     return newPiece
 
-def drawBoard(board):
-    pg.draw.rect(GAME, BLUE, (XMARGIN - 3, YMARGIN - 7, (BOARDWIDTH * BOXSIZE) + 8, (BOARDHEIGHT * BOXSIZE) + 8), 5)
-
-    for x in range(BOARDWIDTH):
-        for y in range(BOARDHEIGHT):
-            drawBox(x, y, board[x][y])
-
 def drawStatus(score, level):
     scoreSurf = MFont.render('Score: %s' % score, True, WHITE)
     GAME.blit(scoreSurf, (WIDTH - 150, 20))
@@ -308,10 +315,26 @@ def drawStatus(score, level):
     levelSurf = MFont.render('Level: %s' % level, True, WHITE)
     GAME.blit(levelSurf, (WIDTH - 150, 60))
 
+def drawBoard(board):
+    pg.draw.rect(GAME, BLUE, (XMARGIN - 3, YMARGIN - 7, (BOARDWIDTH * BOXSIZE) + 8, (BOARDHEIGHT * BOXSIZE) + 8), 5)
+
+    for x in range(BOARDWIDTH):
+        for y in range(BOARDHEIGHT):
+            drawBox(x, y, board[x][y])
+
+def drawBox(boxx, boxy, color, pixelx=None, pixely=None):
+    if color == BLANK:
+        return
+    if pixelx == None and pixely == None:
+        pixelx, pixely = convertToPixelCoords(boxx, boxy)
+    pg.draw.rect(GAME, COLORS[color], (pixelx + 1, pixely + 1, BOXSIZE - 1, BOXSIZE - 1))
+
+
 def drawNextPiece(piece):
     MFont = pg.font.SysFont('monaco', 50)
     nextSurf = MFont.render('Next:', True, WHITE)
     GAME.blit(nextSurf, (WIDTH - 120, 100))
+
     drawPiece(piece, pixelx=WIDTH-120, pixely=150)
 
 def drawPiece(piece, pixelx=None, pixely=None):
@@ -323,13 +346,6 @@ def drawPiece(piece, pixelx=None, pixely=None):
         for y in range(BOXHEIGHT):
             if shapeToDraw[y][x] != BLANK:
                 drawBox(None, None, piece['color'], pixelx + (x * BOXSIZE), pixely + (y * BOXSIZE))
-
-def drawBox(boxx, boxy, color, pixelx=None, pixely=None):
-    if color == BLANK:
-        return
-    if pixelx == None and pixely == None:
-        pixelx, pixely = convertToPixelCoords(boxx, boxy)
-    pg.draw.rect(GAME, COLORS[color], (pixelx + 1, pixely + 1, BOXSIZE - 1, BOXSIZE - 1))
 
 def addToBoard(board, piece):
     # fill in the board based on piece's location, shape, and rotation
