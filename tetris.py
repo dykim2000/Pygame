@@ -235,8 +235,7 @@ def runGame():
                     fallingPiece['x'] -= 1
                 elif event.key == pg.K_RIGHT and CHpiece(board, fallingPiece, X=1):
                     fallingPiece['x'] += 1
-                elif event.key == pg.K_DOWN:
-                    if CHpiece(board, fallingPiece, Y=1):
+                elif event.key == pg.K_DOWN and CHpiece(board, fallingPiece, Y=1):
                         fallingPiece['y'] += 1
                 elif event.key == pg.K_SPACE:
                     for i in range(BOARDHEIGHT):
@@ -275,8 +274,8 @@ def runGame():
 def CHpiece(board, piece, X=0, Y=0):
     for x in range(BOXWIDTH):
         for y in range(BOXHEIGHT):
-            ispiece = y + piece['y'] + Y < 0
-            if ispiece or PIECES[piece['shape']][piece['rotation']][y][x] == BLANK: # 블럭의 Y값 혹은 보드 안에 있을 경우
+            ispiece = y + piece['y'] + Y
+            if ispiece < 0 or PIECES[piece['shape']][piece['rotation']][y][x] == BLANK: # 블럭의 Y값 혹은 보드 안에 있을 경우
                 continue
             if not isOnBoard(x + piece['x'] + X, y + piece['y'] + Y): # 보드 안에 블럭 상속
                 return False
@@ -314,6 +313,9 @@ def drawStatus(score, level):
 
     levelSurf = MFont.render('Level: %s' % level, True, WHITE)
     GAME.blit(levelSurf, (WIDTH - 150, 60))
+
+def isOnBoard(x, y):
+    return x >= 0 and x < BOARDWIDTH and y < BOARDHEIGHT
 
 def drawBoard(board):
     pg.draw.rect(GAME, BLUE, (XMARGIN - 3, YMARGIN - 7, (BOARDWIDTH * BOXSIZE) + 8, (BOARDHEIGHT * BOXSIZE) + 8), 5)
@@ -353,10 +355,6 @@ def addToBoard(board, piece):
         for y in range(BOXHEIGHT):
             if PIECES[piece['shape']][piece['rotation']][y][x] != BLANK:
                 board[x + piece['x']][y + piece['y']] = piece['color']
-
-def isOnBoard(x, y):
-    return x >= 0 and x < BOARDWIDTH and y < BOARDHEIGHT
-
 
 def removeCompleteLines(board):
     numLinesRemoved = 0
