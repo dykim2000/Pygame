@@ -47,10 +47,19 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tetris.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="698">
-              <caret line="380" column="12" selection-start-line="380" selection-start-column="12" selection-end-line="380" selection-end-column="12" />
+            <state relative-caret-position="793">
+              <caret line="379" column="34" lean-forward="true" selection-start-line="379" selection-start-column="34" selection-end-line="379" selection-end-column="34" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#3428#4527#0" />
+                <element signature="e#4545#5681#0" />
+                <element signature="e#8176#8651#0" />
+                <element signature="e#8678#8781#0" />
+                <element signature="e#8808#8954#0" />
+                <element signature="e#9023#9425#0" />
+                <element signature="e#9374#9426#0" />
+                <element signature="e#9340#9550#0" />
+                <element signature="e#9855#10059#0" />
               </folding>
             </state>
           </provider>
@@ -59,8 +68,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tt.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7391">
-              <caret line="390" column="25" selection-start-line="390" selection-start-column="24" selection-end-line="390" selection-end-column="25" />
+            <state relative-caret-position="-2888">
+              <caret line="200" column="30" lean-forward="true" selection-start-line="200" selection-start-column="30" selection-end-line="200" selection-end-column="30" />
               <folding>
                 <element signature="e#152#184#0" expanded="true" />
               </folding>
@@ -305,7 +314,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.329718" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3340564" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.324295" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3991323" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -419,6 +428,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2888">
+          <caret line="200" column="30" lean-forward="true" selection-start-line="200" selection-start-column="30" selection-end-line="200" selection-end-column="30" />
+          <folding>
+            <element signature="e#152#184#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/shot.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="418">
@@ -430,22 +449,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tt.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7391">
-          <caret line="390" column="25" selection-start-line="390" selection-start-column="24" selection-end-line="390" selection-end-column="25" />
-          <folding>
-            <element signature="e#152#184#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tetris.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="698">
-          <caret line="380" column="12" selection-start-line="380" selection-start-column="12" selection-end-line="380" selection-end-column="12" />
+        <state relative-caret-position="793">
+          <caret line="379" column="34" lean-forward="true" selection-start-line="379" selection-start-column="34" selection-end-line="379" selection-end-column="34" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#3428#4527#0" />
+            <element signature="e#4545#5681#0" />
+            <element signature="e#8176#8651#0" />
+            <element signature="e#8678#8781#0" />
+            <element signature="e#8808#8954#0" />
+            <element signature="e#9023#9425#0" />
+            <element signature="e#9374#9426#0" />
+            <element signature="e#9340#9550#0" />
+            <element signature="e#9855#10059#0" />
           </folding>
         </state>
       </provider>

@@ -1,6 +1,7 @@
 import pygame as pg
 import random, time, sys
 
+# 컬러
 WHITE       = (255, 255, 255)
 BLACK       = (  0,   0,   0)
 RED         = (155,   0,   0)
@@ -8,6 +9,7 @@ GREEN       = (  0, 155,   0)
 BLUE        = (  0,   0, 155)
 YELLOW      = (155, 155,   0)
 
+# 게임 사이즈
 SIZE = [800,640]
 WIDTH = SIZE[0]
 HEIGHT = SIZE[1]
@@ -22,12 +24,15 @@ BOARDWIDTH = 10
 BOARDHEIGHT = 20
 BLANK = '.'
 
+# 블럭 컬러 튜플
 COLORS =(BLUE, GREEN, RED, YELLOW)
 
+# 보드 시작 좌표
 XMARGIN = (WIDTH - BOARDWIDTH * BOXSIZE) / 2
 YMARGIN = (HEIGHT -BOARDHEIGHT * BOXSIZE) - 5
 
-S = [['.....',
+# 블럭 모양 디자인
+S = [               ['.....',
                      '.....',
                      '..0O.',
                      '.OO..',
@@ -38,7 +43,7 @@ S = [['.....',
                      '...O.',
                      '.....']]
 
-Z= [['.....',
+Z= [                ['.....',
                      '.....',
                      '.OO..',
                      '..OO.',
@@ -49,7 +54,7 @@ Z= [['.....',
                      '.O...',
                      '.....']]
 
-I = [['..O..',
+I = [               ['..O..',
                      '..O..',
                      '..O..',
                      '..O..',
@@ -60,13 +65,13 @@ I = [['..O..',
                      '.....',
                      '.....']]
 
-O = [['.....',
+O = [               ['.....',
                      '.....',
                      '.OO..',
                      '.OO..',
                      '.....']]
 
-J = [['.....',
+J = [               ['.....',
                      '.O...',
                      '.OOO.',
                      '.....',
@@ -87,7 +92,7 @@ J = [['.....',
                      '.OO..',
                      '.....']]
 
-L = [['.....',
+L = [               ['.....',
                      '...O.',
                      '.OOO.',
                      '.....',
@@ -108,7 +113,7 @@ L = [['.....',
                      '..O..',
                      '.....']]
 
-T= [['.....',
+T= [                ['.....',
                      '..O..',
                      '.OOO.',
                      '.....',
@@ -128,7 +133,7 @@ T= [['.....',
                      '.OO..',
                      '..O..',
                      '.....']]
-
+# 블럭 관련 딕셔너리
 PIECES = {'S': S,
           'Z': Z,
           'J': J,
@@ -204,12 +209,12 @@ def main():
         pg.display.flip()
 
 def runGame():
-    board = getBlankBoard() #보드 디자인
-
-    lastFallTime = time.time()
+    board = getBlankBoard() # 보드 사이즈 소스 디자인
 
     score = 0
-    level, fallsp = ingamesp(score) # 게임 레벨 과 블럭 떨어지는 속도 지정
+    level, fallsp = ingamesp(score)  # 게임 레벨 과 블럭 떨어지는 속도 지정
+
+    lastFallTime = time.time() # 1초
 
     # 떨어지는 블럭 과 다음 블럭 지정
     fallingPiece = getNewPiece()
@@ -222,7 +227,7 @@ def runGame():
             nextPiece = getNewPiece()
             lastFallTime = time.time()
 
-            if not CHpiece(board, fallingPiece):
+            if not CHpiece(board, fallingPiece): # 블럭 쌓이는게 보드를 초과 했을 때
                 end(score)
 
         for event in pg.event.get():
@@ -230,6 +235,7 @@ def runGame():
                 check = False
                 sys.exit()
 
+            # 블럭의 X,Y 좌표 변화
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_LEFT and CHpiece(board, fallingPiece, X=-1):
                     fallingPiece['x'] -= 1
@@ -237,35 +243,33 @@ def runGame():
                     fallingPiece['x'] += 1
                 elif event.key == pg.K_DOWN and CHpiece(board, fallingPiece, Y=1):
                         fallingPiece['y'] += 1
+                # 테트리스 스페이스 구현
                 elif event.key == pg.K_SPACE:
                     for i in range(BOARDHEIGHT):
                         if not CHpiece(board, fallingPiece, Y=i):
                             break
                     fallingPiece['y'] += i - 1
+                # 블럭 모양 변화
                 elif event.key == pg.K_UP:
                     fallingPiece['rotation'] = (fallingPiece['rotation'] + 1) % len(PIECES[fallingPiece['shape']])
                     if not CHpiece(board, fallingPiece):
                         fallingPiece['rotation'] = (fallingPiece['rotation'] - 1) % len(PIECES[fallingPiece['shape']])
 
-
-        if time.time() - lastFallTime > fallsp:
-            # see if the piece has landed
+        if time.time() - lastFallTime > fallsp: # 실시간 진행
             if not CHpiece(board, fallingPiece, Y=1):
-                # falling piece has landed, set it on the board
-                addToBoard(board, fallingPiece)
-                score += removeCompleteLines(board)
+                addToBoard(board, fallingPiece) # 떨어지는 마지막 위치에 블럭을 쌓는다
+                score += remove(board) # 지워지는 블럭 줄 수 만큼 갱신
                 level, fallsp = ingamesp(score)
                 fallingPiece = None
-            else:
-                # piece did not land, just move the piece down
+            else: # 1초마다 블럭이 fallsp 값 만큼 떨어진다
                 fallingPiece['y'] += 1
                 lastFallTime = time.time()
 
         GAME.fill(BLACK)
-        drawBoard(board)
-        drawStatus(score, level)
-        drawNextPiece(nextPiece)
-        if fallingPiece != None:
+        drawBoard(board) # 보드 그리기
+        drawStatus(score, level) # 스텟 띄우기
+        drawNextPiece(nextPiece) # 다음 블럭 상태 그리기
+        if fallingPiece != None: # 떨어지는 블럭이 있을 때
             drawPiece(fallingPiece)
 
         pg.display.flip()
@@ -307,6 +311,9 @@ def getNewPiece():
                 'color': random.randint(0, len(COLORS)-1)}
     return newPiece
 
+def isOnBoard(x, y):
+    return x >= 0 and x < BOARDWIDTH and y < BOARDHEIGHT
+
 def drawStatus(score, level):
     scoreSurf = MFont.render('Score: %s' % score, True, WHITE)
     GAME.blit(scoreSurf, (WIDTH - 150, 20))
@@ -314,8 +321,33 @@ def drawStatus(score, level):
     levelSurf = MFont.render('Level: %s' % level, True, WHITE)
     GAME.blit(levelSurf, (WIDTH - 150, 60))
 
-def isOnBoard(x, y):
-    return x >= 0 and x < BOARDWIDTH and y < BOARDHEIGHT
+def addToBoard(board, piece):
+    for x in range(BOXWIDTH):
+        for y in range(BOXHEIGHT):
+            if PIECES[piece['shape']][piece['rotation']][y][x] != BLANK:
+                board[x + piece['x']][y + piece['y']] = piece['color']
+
+def remove(board):
+    numLinesRemoved = 0
+    y = BOARDHEIGHT - 1
+    while y >= 0:
+        if isCompleteLine(board, y):
+            for pullDownY in range(y, 0, -1):
+                for x in range(BOARDWIDTH):
+                    board[x][pullDownY] = board[x][pullDownY-1]
+            # Set very top line to blank.
+            for x in range(BOARDWIDTH):
+                board[x][0] = BLANK
+            numLinesRemoved += 1
+        else:
+            y -= 1
+    return numLinesRemoved
+
+def isCompleteLine(board, y):
+    for x in range(BOARDWIDTH):
+        if board[x][y] == BLANK:
+            return False
+    return True
 
 def drawBoard(board):
     pg.draw.rect(GAME, BLUE, (XMARGIN - 3, YMARGIN - 7, (BOARDWIDTH * BOXSIZE) + 8, (BOARDHEIGHT * BOXSIZE) + 8), 5)
@@ -348,35 +380,6 @@ def drawPiece(piece, pixelx=None, pixely=None):
         for y in range(BOXHEIGHT):
             if shapeToDraw[y][x] != BLANK:
                 drawBox(None, None, piece['color'], pixelx + (x * BOXSIZE), pixely + (y * BOXSIZE))
-
-def addToBoard(board, piece):
-    # fill in the board based on piece's location, shape, and rotation
-    for x in range(BOXWIDTH):
-        for y in range(BOXHEIGHT):
-            if PIECES[piece['shape']][piece['rotation']][y][x] != BLANK:
-                board[x + piece['x']][y + piece['y']] = piece['color']
-
-def removeCompleteLines(board):
-    numLinesRemoved = 0
-    y = BOARDHEIGHT - 1
-    while y >= 0:
-        if isCompleteLine(board, y):
-            for pullDownY in range(y, 0, -1):
-                for x in range(BOARDWIDTH):
-                    board[x][pullDownY] = board[x][pullDownY-1]
-            # Set very top line to blank.
-            for x in range(BOARDWIDTH):
-                board[x][0] = BLANK
-            numLinesRemoved += 1
-        else:
-            y -= 1
-    return numLinesRemoved
-
-def isCompleteLine(board, y):
-    for x in range(BOARDWIDTH):
-        if board[x][y] == BLANK:
-            return False
-    return True
 
 def convertToPixelCoords(boxx, boxy):
     return (XMARGIN + (boxx * BOXSIZE)), (YMARGIN + (boxy * BOXSIZE))
