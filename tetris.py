@@ -27,7 +27,7 @@ BLANK = '.'
 # 블럭 컬러 튜플
 COLORS =(BLUE, GREEN, RED, YELLOW)
 
-# 보드 시작 좌표
+
 XMARGIN = (WIDTH - BOARDWIDTH * BOXSIZE) / 2
 YMARGIN = (HEIGHT -BOARDHEIGHT * BOXSIZE) - 5
 
@@ -254,6 +254,8 @@ def runGame():
                     fallingPiece['rotation'] = (fallingPiece['rotation'] + 1) % len(PIECES[fallingPiece['shape']])
                     if not CHpiece(board, fallingPiece):
                         fallingPiece['rotation'] = (fallingPiece['rotation'] - 1) % len(PIECES[fallingPiece['shape']])
+                elif event.key == pg.K_r:
+                    runGame()
 
         if time.time() - lastFallTime > fallsp: # 실시간 진행
             if not CHpiece(board, fallingPiece, Y=1):
@@ -328,24 +330,23 @@ def addToBoard(board, piece):
                 board[x + piece['x']][y + piece['y']] = piece['color']
 
 def remove(board):
-    numLinesRemoved = 0
+    removeline = 0
     y = BOARDHEIGHT - 1
     while y >= 0:
         if isCompleteLine(board, y):
             for pullDownY in range(y, 0, -1):
                 for x in range(BOARDWIDTH):
-                    board[x][pullDownY] = board[x][pullDownY-1]
-            # Set very top line to blank.
+                    board[x][pullDownY] = board[x][pullDownY-1] # 블럭 제거 시 블럭 한 줄 아래로 당기기
             for x in range(BOARDWIDTH):
-                board[x][0] = BLANK
-            numLinesRemoved += 1
+                board[x][0] = BLANK # 쌓였던 블럭 지우기
+            removeline += 1
         else:
             y -= 1
-    return numLinesRemoved
+    return removeline
 
 def isCompleteLine(board, y):
     for x in range(BOARDWIDTH):
-        if board[x][y] == BLANK:
+        if board[x][y] == BLANK: # 라인 체크 시 빈틈이 있을 때
             return False
     return True
 
@@ -360,8 +361,8 @@ def drawBox(boxx, boxy, color, pixelx=None, pixely=None):
     if color == BLANK:
         return
     if pixelx == None and pixely == None:
-        pixelx, pixely = convertToPixelCoords(boxx, boxy)
-    pg.draw.rect(GAME, COLORS[color], (pixelx + 1, pixely + 1, BOXSIZE - 1, BOXSIZE - 1))
+        pixelx, pixely = Pixel(boxx, boxy)
+    pg.draw.rect(GAME, COLORS[color], (pixelx , pixely , BOXSIZE - 1, BOXSIZE - 1))
 
 
 def drawNextPiece(piece):
@@ -369,19 +370,19 @@ def drawNextPiece(piece):
     nextSurf = MFont.render('Next:', True, WHITE)
     GAME.blit(nextSurf, (WIDTH - 120, 100))
 
-    drawPiece(piece, pixelx=WIDTH-120, pixely=150)
+    drawPiece(piece, pixelx=WIDTH-150, pixely=130)
 
 def drawPiece(piece, pixelx=None, pixely=None):
     shapeToDraw = PIECES[piece['shape']][piece['rotation']]
     if pixelx == None and pixely == None:
-        pixelx, pixely = convertToPixelCoords(piece['x'], piece['y'])
+        pixelx, pixely = Pixel(piece['x'], piece['y'])
 
     for x in range(BOXWIDTH):
         for y in range(BOXHEIGHT):
             if shapeToDraw[y][x] != BLANK:
                 drawBox(None, None, piece['color'], pixelx + (x * BOXSIZE), pixely + (y * BOXSIZE))
 
-def convertToPixelCoords(boxx, boxy):
+def Pixel(boxx, boxy):
     return (XMARGIN + (boxx * BOXSIZE)), (YMARGIN + (boxy * BOXSIZE))
 
 main()

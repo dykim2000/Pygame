@@ -44,32 +44,32 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tetris.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="793">
-              <caret line="379" column="34" lean-forward="true" selection-start-line="379" selection-start-column="34" selection-end-line="379" selection-end-column="34" />
+            <state relative-caret-position="380">
+              <caret line="383" lean-forward="true" selection-start-line="383" selection-end-line="383" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#3428#4527#0" />
-                <element signature="e#4545#5681#0" />
-                <element signature="e#8176#8651#0" />
-                <element signature="e#8678#8781#0" />
-                <element signature="e#8808#8954#0" />
-                <element signature="e#9023#9425#0" />
-                <element signature="e#9374#9426#0" />
-                <element signature="e#9340#9550#0" />
-                <element signature="e#9855#10059#0" />
+                <element signature="e#3595#4694#0" />
+                <element signature="e#4712#5848#0" />
+                <element signature="e#8411#8886#0" />
+                <element signature="e#8913#9016#0" />
+                <element signature="e#9043#9189#0" />
+                <element signature="e#9214#9539#0" />
+                <element signature="e#9566#9618#0" />
+                <element signature="e#9654#9864#0" />
+                <element signature="e#10628#10729#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tt.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2888">
-              <caret line="200" column="30" lean-forward="true" selection-start-line="200" selection-start-column="30" selection-end-line="200" selection-end-column="30" />
+            <state relative-caret-position="-332">
+              <caret line="341" column="15" selection-start-line="341" selection-start-column="15" selection-end-line="341" selection-end-column="15" />
               <folding>
                 <element signature="e#152#184#0" expanded="true" />
               </folding>
@@ -97,6 +97,8 @@
       <find>fallfreq</find>
       <find>gray</find>
       <find>&lt;</find>
+      <find>k_a</find>
+      <find>LIGHTCOLORS</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -285,9 +287,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.tetris" />
+        <item itemvalue="Python.tt" />
         <item itemvalue="Python.shot" />
         <item itemvalue="Python.snake" />
-        <item itemvalue="Python.tt" />
         <item itemvalue="Python.sample" />
       </list>
     </recent_temporary>
@@ -428,16 +430,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tt.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2888">
-          <caret line="200" column="30" lean-forward="true" selection-start-line="200" selection-start-column="30" selection-end-line="200" selection-end-column="30" />
-          <folding>
-            <element signature="e#152#184#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/shot.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="418">
@@ -451,19 +443,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tetris.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="793">
-          <caret line="379" column="34" lean-forward="true" selection-start-line="379" selection-start-column="34" selection-end-line="379" selection-end-column="34" />
+        <state relative-caret-position="380">
+          <caret line="383" lean-forward="true" selection-start-line="383" selection-end-line="383" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#3428#4527#0" />
-            <element signature="e#4545#5681#0" />
-            <element signature="e#8176#8651#0" />
-            <element signature="e#8678#8781#0" />
-            <element signature="e#8808#8954#0" />
-            <element signature="e#9023#9425#0" />
-            <element signature="e#9374#9426#0" />
-            <element signature="e#9340#9550#0" />
-            <element signature="e#9855#10059#0" />
+            <element signature="e#3595#4694#0" />
+            <element signature="e#4712#5848#0" />
+            <element signature="e#8411#8886#0" />
+            <element signature="e#8913#9016#0" />
+            <element signature="e#9043#9189#0" />
+            <element signature="e#9214#9539#0" />
+            <element signature="e#9566#9618#0" />
+            <element signature="e#9654#9864#0" />
+            <element signature="e#10628#10729#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-332">
+          <caret line="341" column="15" selection-start-line="341" selection-start-column="15" selection-end-line="341" selection-end-column="15" />
+          <folding>
+            <element signature="e#152#184#0" expanded="true" />
           </folding>
         </state>
       </provider>
