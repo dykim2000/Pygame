@@ -8,86 +8,29 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 brown = (165, 42, 42)
 
-pg.init()
-pg.mixer.init()
-
-gameSize = [800,480]
-xx=gameSize[0]
-yy=gameSize[1]
-playSurface = pg.display.set_mode(gameSize)
-pg.display.set_caption("Snake Game")
-fps = pg.time.Clock()
-
-fm='song/main.mp3'
-fe = 'song/eat.wav'
-fd = 'song/end.mp3'
-fl = 'song/up.wav'
-
-def gameOver():
-    pg.mixer.music.load(fd)
-    pg.mixer.music.play()
-
-    check =True
-    while check:
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                check = False
-                sys.exit()
-
-        playSurface.fill(black)
-        endFont = pg.font.SysFont('times new roman', 72)
-        reFont = pg.font.SysFont('monaco', 70)
-
-        GOsurf = endFont.render("Game Over", True, red)
-        playSurface.blit(GOsurf, ( (xx/2)-150, (yy/2)-50) )
-
-        Ssurf = endFont.render("Score  :  {0}".format(score), True, red)
-        playSurface.blit(Ssurf, ( (xx/2)-130, (yy/2)+50) )
-
-        pg.draw.rect(playSurface,white,pg.Rect((xx/2)-60, (yy/2)+150, 120, 50))
-        text=reFont.render("RE?",True,black)
-        playSurface.blit(text,( (xx/2)-45, (yy/2)+155) )
-
-        cur = pg.mouse.get_pos()
-        click = pg.mouse.get_pressed()
-        if ((xx/2)-60)+120>cur[0]>(xx/2)-60 and ((yy/2)+150)+50>cur[1]>(yy/2)+150:
-            print('버튼 포인트')
-            if(click[0]==1):
-                print('버튼 클릭')
-                main()
-        pg.display.flip()
+gameSize = [600,450]
+width=gameSize[0]
+height=gameSize[1]
 
 def showScore():
     SFont = pg.font.SysFont('monaco', 32)
     Ssurf = SFont.render("Score  :  {0}".format(score), True, black)
-    playSurface.blit(Ssurf, (0,0))
+    GAME.blit(Ssurf, (5,0))
 
-    UFont = pg.font.SysFont('monaco', 32)
-    Usurf = UFont.render("Speed  :  {0}".format(speed), True, black)
-    playSurface.blit(Usurf, (0,50))
-
-    PFont = pg.font.SysFont('monaco', 32)
-    Psurf = PFont.render("Level :  {0}".format(level), True, black)
-    playSurface.blit(Psurf, (0,100))
-
-def inGame():
-    pg.mixer.music.stop()
-
+def run():
     check = True
+    global score,speed,level
+    Size = 10
+    score = 0
+    speed = 5
+    level = 5
     state = ''
     change = ''
-    global score
-    score = 0
-    global speed
-    speed = 5
-    Size = 11
-    global level
-    level = 5
 
-    snakeHead = [random.randrange(1, xx - 10), random.randrange(1, yy - 10)]
+    snakeHead = [random.randrange(0, width - Size), random.randrange(0, height - Size)]
     snakeBody = [snakeHead]
 
-    food = [random.randrange(1, xx - 10), random.randrange(1, yy - 10)]
+    food = [random.randrange(0, width - Size), random.randrange(0, height - Size)]
     foodSpawn = True
 
     while check:
@@ -95,6 +38,7 @@ def inGame():
             if event.type == pg.QUIT:
                 check = False
                 sys.exit()
+
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_RIGHT:
                     change = 'RIGHT'
@@ -129,8 +73,6 @@ def inGame():
         snakeBody.insert(0, list(snakeHead))
 
         if drawHead.colliderect(drawFood):
-            pg.mixer.music.load(fe)
-            pg.mixer.music.play()
             print('먹는다!')
             foodSpawn = False
             score += 1
@@ -138,24 +80,22 @@ def inGame():
             snakeBody.pop()
 
         if score == level:
-            pg.mixer.music.load(fl)
-            pg.mixer.music.play()
             level += 10
             speed += 1
             print('레벨 업! ' + str(speed))
 
         if foodSpawn == False:
-            food = [random.randrange(1, xx - 10), random.randrange(1, yy - 10)]
+            food = [random.randrange(1, width - Size), random.randrange(1, height - Size)]
             foodSpawn = True
 
-        playSurface.fill(white)
+        GAME.fill(white)
         for pos in snakeBody:
-            pg.draw.rect(playSurface, green, pg.Rect(pos[0], pos[1], Size, Size))
+            pg.draw.rect(GAME, green, pg.Rect(pos[0], pos[1], Size, Size))
 
-        pg.draw.rect(playSurface, red, pg.Rect(snakeHead[0], snakeHead[1], Size, Size))
-        pg.draw.rect(playSurface, brown, pg.Rect(food[0], food[1], Size, Size))
+        pg.draw.rect(GAME, red, pg.Rect(snakeHead[0], snakeHead[1], Size, Size))
+        pg.draw.rect(GAME, brown, pg.Rect(food[0], food[1], Size, Size))
 
-        if drawHead.bottom > gameSize[1]:
+        if drawHead.bottom > height:
             print('벽 조심')
             gameOver()
             check=False
@@ -167,7 +107,7 @@ def inGame():
             print('벽 조심')
             gameOver()
             check=False
-        elif drawHead.right > gameSize[0]:
+        elif drawHead.right > width:
             print('벽 조심')
             gameOver()
             check=False
@@ -179,11 +119,15 @@ def inGame():
                 check = False
         showScore()
         pg.display.flip()
-        fps.tick(30)
+        FPS.tick(30)
 
 def main():
-    pg.mixer.music.load(fm)
-    pg.mixer.music.play()
+    global GAME,FPS
+    pg.init()
+
+    GAME = pg.display.set_mode(gameSize)
+    pg.display.set_caption("Snake Game")
+    FPS = pg.time.Clock()
 
     check = True
     while check:
@@ -192,25 +136,58 @@ def main():
                 check = False
                 sys.exit()
 
-        playSurface.fill(black)
-        endFont = pg.font.SysFont('Stencil', 100)
+        GAME.fill(black)
+
+        endFont = pg.font.SysFont('Stencil', 85)
         reFont = pg.font.SysFont('monaco', 50)
 
         GOsurf = endFont.render("SNAKE GAME", True, green)
-        playSurface.blit(GOsurf, ( (xx / 2) - 250, (yy / 2) - 50))
+        GAME.blit(GOsurf, ((width / 2) - 250, (height / 2) - 50))
 
-        pg.draw.rect(playSurface, white, pg.Rect((xx / 2) - 60, (yy / 2) + 150, 120, 50))
+        pg.draw.rect(GAME, white, pg.Rect((width / 2) - 60, (height / 2) + 90, 120, 50))
         text = reFont.render("START", True, black)
-        playSurface.blit(text, ((xx / 2) - 55, (yy / 2) + 160))
+        GAME.blit(text, ((width / 2) - 55, (height / 2) + 100))
 
         cur = pg.mouse.get_pos()
         click = pg.mouse.get_pressed()
-        if ((xx / 2) - 60) + 120 > cur[0] > (xx / 2) - 60 and ((yy / 2) + 150) + 50 > cur[1] > (yy / 2) + 150:
+        if ((width / 2) - 60) + 120 > cur[0] > (width / 2) - 60 and ((height / 2) + 90) + 50 > cur[1] > (height / 2) + 90:
             print('버튼 포인트')
             if (click[0] == 1):
                 print('버튼 클릭')
-                inGame()
+                run()
                 check=False
+
+        pg.display.flip()
+
+def gameOver():
+    check =True
+    while check:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                check = False
+                sys.exit()
+
+        GAME.fill(black)
+        endFont = pg.font.SysFont('times new roman', 72)
+        reFont = pg.font.SysFont('monaco', 70)
+
+        GOsurf = endFont.render("Game Over", True, red)
+        GAME.blit(GOsurf, ((width / 2) - 150, (height / 2) - 50))
+
+        Ssurf = endFont.render("Score  :  {0}".format(score), True, red)
+        GAME.blit(Ssurf, ((width / 2) - 130, (height / 2) + 50))
+
+        pg.draw.rect(GAME, white, pg.Rect((width / 2) - 60, (height / 2) + 150, 120, 50))
+        text=reFont.render("RE?",True,black)
+        GAME.blit(text, ((width / 2) - 45, (height / 2) + 155))
+
+        cur = pg.mouse.get_pos()
+        click = pg.mouse.get_pressed()
+        if ((width / 2) - 60)+120>cur[0]>(width / 2)-60 and ((height / 2) + 150)+50>cur[1]>(height / 2)+150:
+            print('버튼 포인트')
+            if(click[0]==1):
+                print('버튼 클릭')
+                run()
         pg.display.flip()
 
 main()
