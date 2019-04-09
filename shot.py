@@ -3,8 +3,9 @@ import sys
 import random
 
 black = (0, 0, 0)
-red = (255, 0, 0)
 white = (255, 255, 255)
+red = (255, 0, 0)
+
 
 size=[960,679]
 width = size[0]
@@ -18,7 +19,7 @@ en_y = 90
 
 def drawsc():
     SFont = pg.font.SysFont('monaco', 32)
-    Ssurf = SFont.render("Score  :  {0}".format(sc), True, white)
+    Ssurf = SFont.render("Score  :  {0}".format(score), True, white)
 
     game.blit(Ssurf,(0,0))
 
@@ -35,21 +36,19 @@ def crash():
         reFont = pg.font.SysFont('monaco', 70)
 
         GOsurf = endFont.render("Game Over", True, red)
-        game.blit(GOsurf, ( (width / 2) - 150 , (height / 2) - 50) )
+        game.blit(GOsurf, ((width / 2) - 150 , (height / 2) - 50))
 
-        Ssurf = endFont.render("Score  :  {0}".format(sc), True, red)
-        game.blit(Ssurf, ( (width / 2) - 130 , (height / 2) + 50) )
+        Ssurf = endFont.render("Score  :  {0}".format(score), True, red)
+        game.blit(Ssurf, ((width / 2) - 130 , (height / 2) + 50))
 
         pg.draw.rect(game, white, pg.Rect((width / 2) - 60, (height / 2) + 150, 120, 50))
         text = reFont.render("RE?", True, black)
-        game.blit(text, ( (width / 2)-45 , (height / 2)+155 ) )
+        game.blit(text, ((width / 2)-45 , (height / 2)+155 ))
 
         cur = pg.mouse.get_pos()
         click = pg.mouse.get_pressed()
         if ((width / 2) - 60) + 120 > cur[0] > (width / 2) - 60 and ((height / 2) + 150) + 50 > cur[1] > (height / 2) + 150:
-            print('버튼 포인트')
             if (click[0] == 1):
-                print('버튼 클릭')
                 main()
         pg.display.flip()
 
@@ -57,22 +56,23 @@ def drawobj(obj,x,y):
     game.blit(obj,(x,y))
 
 def run():
-    global sc #스코어
-    sc=0
-    isShot = False #타격 판정
-    isCon = 0 #이펙트 유지 시간
+    global score
+    score=0
+
+    isShot = False
+    isCon = 0
 
     x=0
     y=0
-    y_ch = 0 #플레이어 x,y 좌표 및 y좌표 갱신
+    y_ch = 0
 
-    bullet_xy=[] #총알 x,y 좌표 배열
+    bullet_xy=[]
 
     back_x=0
-    back_x2=width #백그라운드 x좌표
+    back_x2=width
 
     enemy_x=width
-    enemy_y=random.randrange(0,height-en_y) #적 x,y 좌표
+    enemy_y=random.randrange(0,height-en_y)
 
     check = True
     while check:
@@ -81,7 +81,7 @@ def run():
                 check = False
                 sys.exit()
 
-            if event.type == pg.KEYDOWN: #키가 눌렸을 때
+            if event.type == pg.KEYDOWN:
                 if event.key == pg.K_UP:
                     y_ch = -15
                 elif event.key == pg.K_DOWN:
@@ -91,7 +91,7 @@ def run():
                     bullet_y = y+pl_y/2
                     bullet_xy.append([bullet_x, bullet_y])
 
-            if event.type == pg.KEYUP: # 키를 땠을 때
+            if event.type == pg.KEYUP:
                 if event.key == pg.K_UP or event.key == pg.K_DOWN:
                     y_ch = 0
         y+=y_ch
@@ -118,7 +118,7 @@ def run():
                 bullet_xy[i][0]=bxy[0]
                 if bxy[0] > enemy_x:
                     if bxy[1] > enemy_y and bxy[1]<enemy_y+en_y:
-                        sc+=1
+                        score+=1
                         bullet_xy.remove(bxy)
                         isShot = True
                 if bxy[0]>=width:
@@ -139,7 +139,7 @@ def run():
         else:
             drawobj(boom,enemy_x,enemy_y)
             isCon+=1
-            if isCon > 5:
+            if isCon > 3:
                 isCon=0
                 enemy_x=width
                 enemy_y = random.randrange(0, height-en_y)
@@ -156,22 +156,22 @@ def main():
     global player,backgr,backgr2
     global enemy,bullet,boom
 
-    game = pg.display.set_mode((size)) #디스플레이 옵션
-    pg.display.set_caption('Shooting') #제목
-    fps = pg.time.Clock() #프레임
+    game = pg.display.set_mode((size))
+    pg.display.set_caption('Shooting')
+    fps = pg.time.Clock()
 
     player = pg.image.load('img/plane.png')
-    player = pg.transform.scale(player,(130,70)) #크기
+    player = pg.transform.scale(player,(130,70))
 
     backgr = pg.image.load('img/sky.png')
     backgr2 = backgr.copy()
 
     enemy = pg.image.load('img/enemy.png')
-    enemy = pg.transform.flip(enemy,1,0) #반전
+    enemy = pg.transform.flip(enemy,1,0)
     enemy= pg.transform.scale(enemy,(150, 90))
 
     bullet = pg.image.load('img/bullet.png')
-    bullet = pg.transform.rotate(bullet,180) #회전
+    bullet = pg.transform.rotate(bullet,180)
     bullet = pg.transform.scale(bullet, (50,10))
 
     boom = pg.image.load('img/boom.png')

@@ -8,9 +8,9 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 brown = (165, 42, 42)
 
-gameSize = [600,450]
-width=gameSize[0]
-height=gameSize[1]
+Size = [600, 450]
+width=Size[0]
+height=Size[1]
 
 def showScore():
     SFont = pg.font.SysFont('monaco', 32)
@@ -20,17 +20,17 @@ def showScore():
 def run():
     check = True
     global score,speed,level
-    Size = 10
+    objSize = 10
     score = 0
     speed = 5
     level = 5
     state = ''
     change = ''
 
-    snakeHead = [random.randrange(0, width - Size), random.randrange(0, height - Size)]
+    snakeHead = [random.randrange(0, width - objSize), random.randrange(0, height - objSize)]
     snakeBody = [snakeHead]
 
-    food = [random.randrange(0, width - Size), random.randrange(0, height - Size)]
+    food = [random.randrange(0, width - objSize), random.randrange(0, height - objSize)]
     foodSpawn = True
 
     while check:
@@ -67,13 +67,12 @@ def run():
         elif state == 'UP':
             snakeHead[1] -= speed
 
-        drawHead = pg.Rect(snakeHead[0], snakeHead[1], Size, Size)
-        drawFood = pg.Rect(food[0], food[1], Size, Size)
+        drawHead = pg.Rect(snakeHead[0], snakeHead[1], objSize, objSize)
+        drawFood = pg.Rect(food[0], food[1], objSize, objSize)
 
         snakeBody.insert(0, list(snakeHead))
 
         if drawHead.colliderect(drawFood):
-            print('먹는다!')
             foodSpawn = False
             score += 1
         else:
@@ -82,39 +81,34 @@ def run():
         if score == level:
             level += 10
             speed += 1
-            print('레벨 업! ' + str(speed))
 
         if foodSpawn == False:
-            food = [random.randrange(1, width - Size), random.randrange(1, height - Size)]
+            food = [random.randrange(1, width - objSize), random.randrange(1, height - objSize)]
             foodSpawn = True
 
         GAME.fill(white)
-        for pos in snakeBody:
-            pg.draw.rect(GAME, green, pg.Rect(pos[0], pos[1], Size, Size))
 
-        pg.draw.rect(GAME, red, pg.Rect(snakeHead[0], snakeHead[1], Size, Size))
-        pg.draw.rect(GAME, brown, pg.Rect(food[0], food[1], Size, Size))
+        for pos in snakeBody:
+            pg.draw.rect(GAME, green, pg.Rect(pos[0], pos[1], objSize, objSize))
+
+        pg.draw.rect(GAME, red, pg.Rect(snakeHead[0], snakeHead[1], objSize, objSize))
+        pg.draw.rect(GAME, brown, pg.Rect(food[0], food[1], objSize, objSize))
 
         if drawHead.bottom > height:
-            print('벽 조심')
             gameOver()
             check=False
         elif drawHead.top < 0:
-            print('벽 조심')
             gameOver()
             check=False
         elif drawHead.left < 0:
-            print('벽 조심')
             gameOver()
             check=False
         elif drawHead.right > width:
-            print('벽 조심')
             gameOver()
             check=False
 
         for tail in snakeBody[1:]:
             if snakeHead == tail:
-                print('꼬리 조심')
                 gameOver()
                 check = False
         showScore()
@@ -125,7 +119,7 @@ def main():
     global GAME,FPS
     pg.init()
 
-    GAME = pg.display.set_mode(gameSize)
+    GAME = pg.display.set_mode(Size)
     pg.display.set_caption("Snake Game")
     FPS = pg.time.Clock()
 
@@ -151,9 +145,7 @@ def main():
         cur = pg.mouse.get_pos()
         click = pg.mouse.get_pressed()
         if ((width / 2) - 60) + 120 > cur[0] > (width / 2) - 60 and ((height / 2) + 90) + 50 > cur[1] > (height / 2) + 90:
-            print('버튼 포인트')
             if (click[0] == 1):
-                print('버튼 클릭')
                 run()
                 check=False
 
@@ -184,9 +176,7 @@ def gameOver():
         cur = pg.mouse.get_pos()
         click = pg.mouse.get_pressed()
         if ((width / 2) - 60)+120>cur[0]>(width / 2)-60 and ((height / 2) + 150)+50>cur[1]>(height / 2)+150:
-            print('버튼 포인트')
             if(click[0]==1):
-                print('버튼 클릭')
                 run()
         pg.display.flip()
 
