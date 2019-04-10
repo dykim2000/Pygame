@@ -1,7 +1,6 @@
 import pygame as pg
 import random, time, sys
 
-# 컬러
 WHITE       = (255, 255, 255)
 BLACK       = (  0,   0,   0)
 RED         = (155,   0,   0)
@@ -9,29 +8,23 @@ GREEN       = (  0, 155,   0)
 BLUE        = (  0,   0, 155)
 YELLOW      = (155, 155,   0)
 
-# 게임 사이즈
 SIZE = [800,640]
 WIDTH = SIZE[0]
 HEIGHT = SIZE[1]
 
-# 블럭 디자인 값
 BOXSIZE = 30
 BOXWIDTH = 5
 BOXHEIGHT = 5
 
-# 보드 디자인 값
 BOARDWIDTH = 10
 BOARDHEIGHT = 20
 BLANK = '.'
 
-# 블럭 컬러 튜플
 COLORS =(BLUE, GREEN, RED, YELLOW)
-
 
 XMARGIN = (WIDTH - BOARDWIDTH * BOXSIZE) / 2
 YMARGIN = (HEIGHT -BOARDHEIGHT * BOXSIZE) - 5
 
-# 블럭 모양 디자인
 S = [               ['.....',
                      '.....',
                      '..0O.',
@@ -133,7 +126,6 @@ T= [                ['.....',
                      '.OO..',
                      '..O..',
                      '.....']]
-# 블럭 관련 딕셔너리
 PIECES = {'S': S,
           'Z': Z,
           'J': J,
@@ -167,10 +159,8 @@ def end(sc):
         cur = pg.mouse.get_pos()
         click = pg.mouse.get_pressed()
         if ((WIDTH / 2) - 60) + 120 > cur[0] > (WIDTH/ 2) - 60 and ((HEIGHT / 2) + 150) + 50 > cur[1] > (HEIGHT / 2) + 150:
-            print('버튼 포인트')
             if (click[0] == 1):
-                print('버튼 클릭')
-                runGame()
+                run()
         pg.display.flip()
 
 def main():
@@ -188,46 +178,45 @@ def main():
                 check = False
                 sys.exit()
 
-        GAME.fill(BLACK) # 검은색 배경
-        TFont = pg.font.SysFont('Stencil', 100) # 타이틀 폰트
+        GAME.fill(BLACK)
+        TFont = pg.font.SysFont('Stencil', 100)
         GOsurf = TFont.render("Tetris", True, GREEN)
         GAME.blit(GOsurf, ((WIDTH / 2) - 150, (HEIGHT / 2) - 50))
 
-        global MFont # 메인 폰트
+        global MFont
         MFont = pg.font.SysFont('monaco', 50)
 
         pg.draw.rect(GAME, WHITE, pg.Rect((WIDTH / 2) - 60, (HEIGHT / 2) + 150, 120, 50)) # 버튼 디자인
         text = MFont.render("START", True, BLACK) # 버튼 글자
         GAME.blit(text, ((WIDTH / 2) - 55, (HEIGHT / 2) + 160))
 
-        cur = pg.mouse.get_pos() # 커서 위치
-        click = pg.mouse.get_pressed() # 마우스 클릭
+        cur = pg.mouse.get_pos()
+        click = pg.mouse.get_pressed()
         if ((WIDTH / 2) - 60) + 120 > cur[0] > (WIDTH / 2) - 60 and ((HEIGHT / 2) + 150) + 50 > cur[1] > (HEIGHT / 2) + 150:
             if (click[0] == 1):
-                runGame()
+                run()
                 check = False
         pg.display.flip()
 
-def runGame():
-    board = getBlankBoard() # 보드 사이즈 소스 디자인
+def run():
+    board = getBlankBoard()
 
     score = 0
-    level, fallsp = ingamesp(score)  # 게임 레벨 과 블럭 떨어지는 속도 지정
+    level, fallsp = ingamesp(score)
 
-    lastFallTime = time.time() # 1초
+    lastFallTime = time.time()
 
-    # 떨어지는 블럭 과 다음 블럭 지정
     fallingPiece = getNewPiece()
     nextPiece = getNewPiece()
 
     check = True
     while check:
-        if fallingPiece == None: # 떨어지는 블럭이 없다면 재갱신
+        if fallingPiece == None:
             fallingPiece = nextPiece
             nextPiece = getNewPiece()
             lastFallTime = time.time()
 
-            if not CHpiece(board, fallingPiece): # 블럭 쌓이는게 보드를 초과 했을 때
+            if not CHpiece(board, fallingPiece):
                 end(score)
 
         for event in pg.event.get():
@@ -235,7 +224,6 @@ def runGame():
                 check = False
                 sys.exit()
 
-            # 블럭의 X,Y 좌표 변화
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_LEFT and CHpiece(board, fallingPiece, X=-1):
                     fallingPiece['x'] -= 1
@@ -243,35 +231,33 @@ def runGame():
                     fallingPiece['x'] += 1
                 elif event.key == pg.K_DOWN and CHpiece(board, fallingPiece, Y=1):
                         fallingPiece['y'] += 1
-                # 테트리스 스페이스 구현
                 elif event.key == pg.K_SPACE:
                     for i in range(BOARDHEIGHT):
                         if not CHpiece(board, fallingPiece, Y=i):
                             break
                     fallingPiece['y'] += i - 1
-                # 블럭 모양 변화
                 elif event.key == pg.K_UP:
                     fallingPiece['rotation'] = (fallingPiece['rotation'] + 1) % len(PIECES[fallingPiece['shape']])
                     if not CHpiece(board, fallingPiece):
                         fallingPiece['rotation'] = (fallingPiece['rotation'] - 1) % len(PIECES[fallingPiece['shape']])
                 elif event.key == pg.K_r:
-                    runGame()
+                    run()
 
-        if time.time() - lastFallTime > fallsp: # 실시간 진행
+        if time.time() - lastFallTime > fallsp:
             if not CHpiece(board, fallingPiece, Y=1):
-                addToBoard(board, fallingPiece) # 떨어지는 마지막 위치에 블럭을 쌓는다
-                score += remove(board) # 지워지는 블럭 줄 수 만큼 갱신
+                addToBoard(board, fallingPiece)
+                score += remove(board)
                 level, fallsp = ingamesp(score)
                 fallingPiece = None
-            else: # 1초마다 블럭이 fallsp 값 만큼 떨어진다
+            else:
                 fallingPiece['y'] += 1
                 lastFallTime = time.time()
 
         GAME.fill(BLACK)
-        drawBoard(board) # 보드 그리기
-        drawStatus(score, level) # 스텟 띄우기
-        drawNextPiece(nextPiece) # 다음 블럭 상태 그리기
-        if fallingPiece != None: # 떨어지는 블럭이 있을 때
+        drawBoard(board)
+        drawStatus(score, level)
+        drawNextPiece(nextPiece)
+        if fallingPiece != None:
             drawPiece(fallingPiece)
 
         pg.display.flip()
@@ -281,11 +267,11 @@ def CHpiece(board, piece, X=0, Y=0):
     for x in range(BOXWIDTH):
         for y in range(BOXHEIGHT):
             ispiece = y + piece['y'] + Y
-            if ispiece < 0 or PIECES[piece['shape']][piece['rotation']][y][x] == BLANK: # 블럭의 Y값 혹은 보드 안에 있을 경우
+            if ispiece < 0 or PIECES[piece['shape']][piece['rotation']][y][x] == BLANK:
                 continue
-            if not isOnBoard(x + piece['x'] + X, y + piece['y'] + Y): # 보드 안에 블럭 상속
+            if not isOnBoard(x + piece['x'] + X, y + piece['y'] + Y):
                 return False
-            if board[x + piece['x'] + X][y + piece['y'] + Y] != BLANK: # 블럭 쌓기
+            if board[x + piece['x'] + X][y + piece['y'] + Y] != BLANK:
                 return False
     return True
 
@@ -296,7 +282,7 @@ def getBlankBoard():
     return board
 
 def ingamesp(score):
-    level = int(score/3) + 1 # 3배수 단위
+    level = int(score/3) + 1
     if level < 6:
         fallsp = 0.6 -(level*0.1)+0.1
     else:
@@ -305,7 +291,7 @@ def ingamesp(score):
     return level, fallsp
 
 def getNewPiece():
-    shape = random.choice(list(PIECES.keys())) # 블럭 타입 랜덤 지정
+    shape = random.choice(list(PIECES.keys()))
     newPiece = {'shape': shape,
                 'rotation': random.randint(0, len(PIECES[shape]) - 1),
                 'x': int(BOARDWIDTH / 2) - int(BOXWIDTH / 2),
@@ -336,9 +322,9 @@ def remove(board):
         if isCompleteLine(board, y):
             for pullDownY in range(y, 0, -1):
                 for x in range(BOARDWIDTH):
-                    board[x][pullDownY] = board[x][pullDownY-1] # 블럭 제거 시 블럭 한 줄 아래로 당기기
+                    board[x][pullDownY] = board[x][pullDownY-1]
             for x in range(BOARDWIDTH):
-                board[x][0] = BLANK # 쌓였던 블럭 지우기
+                board[x][0] = BLANK
             removeline += 1
         else:
             y -= 1
@@ -346,7 +332,7 @@ def remove(board):
 
 def isCompleteLine(board, y):
     for x in range(BOARDWIDTH):
-        if board[x][y] == BLANK: # 라인 체크 시 빈틈이 있을 때
+        if board[x][y] == BLANK:
             return False
     return True
 
