@@ -7,6 +7,13 @@ RED         = (155,   0,   0)
 GREEN       = (  0, 155,   0)
 BLUE        = (  0,   0, 155)
 YELLOW      = (155, 155,   0)
+GRAY        =(177,177,177)
+
+LIGHTRED    = (175,  20,  20)
+LIGHTGREEN  = ( 20, 175,  20)
+LIGHTBLUE   = ( 20,  20, 175)
+LIGHTYELLOW = (175, 175,  20)
+
 
 SIZE = [800,640]
 WIDTH = SIZE[0]
@@ -18,9 +25,11 @@ BOXHEIGHT = 5
 
 BOARDWIDTH = 10
 BOARDHEIGHT = 20
+
 BLANK = '.'
 
 COLORS =(BLUE, GREEN, RED, YELLOW)
+LIGHTCOLORS = (LIGHTBLUE, LIGHTGREEN, LIGHTRED, LIGHTYELLOW)
 
 XMARGIN = (WIDTH - BOARDWIDTH * BOXSIZE) / 2
 YMARGIN = (HEIGHT -BOARDHEIGHT * BOXSIZE) - 5
@@ -344,11 +353,18 @@ def drawBoard(board):
             drawBox(x, y, board[x][y])
 
 def drawBox(boxx, boxy, color, pixelx=None, pixely=None):
+
+    for i in range(BOARDWIDTH):
+        pg.draw.line(GAME, GRAY, ((XMARGIN+10)+(i*BOXSIZE-10), YMARGIN-3), ((XMARGIN+10)+(i*BOXSIZE-10) , YMARGIN+600),2)
+    for j in range(BOARDHEIGHT):
+        pg.draw.line(GAME, GRAY, (XMARGIN + 10, (YMARGIN+3)+(j*BOXSIZE)), (XMARGIN + 300, (YMARGIN+3)+(j*BOXSIZE)),2)
+
     if color == BLANK:
         return
     if pixelx == None and pixely == None:
         pixelx, pixely = Pixel(boxx, boxy)
     pg.draw.rect(GAME, COLORS[color], (pixelx , pixely , BOXSIZE - 1, BOXSIZE - 1))
+    pg.draw.rect(GAME, LIGHTCOLORS[color], (pixelx + 1, pixely + 1, BOXSIZE - 10, BOXSIZE - 10))
 
 
 def drawNextPiece(piece):
