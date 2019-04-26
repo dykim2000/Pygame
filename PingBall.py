@@ -31,7 +31,7 @@ STATE_WON = 2
 STATE_GAME_OVER = 3
 
 
-class Bricka:
+class PB:
 
     def __init__(self):
         pygame.init()
@@ -181,4 +181,4 @@ class Bricka:
 
 
 if __name__ == "__main__":
-    Bricka().run()
+    PB().run()
