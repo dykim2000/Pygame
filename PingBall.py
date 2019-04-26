@@ -89,7 +89,7 @@ class PB:
         if keys[pygame.K_SPACE] and self.state == STATE_BALL_IN_PADDLE:
             self.ball_vel = [5, -5]
             self.state = STATE_PLAYING
-        elif keys[pygame.K_RETURN] and (self.state == STATE_GAME_OVER or self.state == STATE_WON):
+        elif keys[pygame.K_r] and (self.state == STATE_GAME_OVER or self.state == STATE_WON):
             self.init_game()
 
     def move_ball(self):
@@ -113,7 +113,7 @@ class PB:
     def handle_collisions(self):
         for brick in self.bricks:
             if self.ball.colliderect(brick):
-                self.score += 3
+                self.score += 1
                 self.ball_vel[1] = -self.ball_vel[1]
                 self.bricks.remove(brick)
                 break
@@ -162,9 +162,9 @@ class PB:
                 self.ball.top = self.paddle.top - self.ball.height
                 self.show_message("PRESS SPACE TO LAUNCH THE BALL")
             elif self.state == STATE_GAME_OVER:
-                self.show_message("GAME OVER. PRESS ENTER TO PLAY AGAIN")
+                self.show_message("GAME OVER. PRESS R TO PLAY AGAIN")
             elif self.state == STATE_WON:
-                self.show_message("YOU WON! PRESS ENTER TO PLAY AGAIN")
+                self.show_message("YOU WON! PRESS R TO PLAY AGAIN")
 
             self.draw_bricks()
 
