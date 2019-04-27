@@ -6,8 +6,10 @@ SCREEN_SIZE = 640, 480
 # Object dimensions
 BRICK_WIDTH = 60
 BRICK_HEIGHT = 15
+
 PADDLE_WIDTH = 60
 PADDLE_HEIGHT = 12
+
 BALL_DIAMETER = 16
 BALL_RADIUS = int(BALL_DIAMETER / 2)
 
@@ -15,42 +17,34 @@ MAX_PADDLE_X = SCREEN_SIZE[0] - PADDLE_WIDTH
 MAX_BALL_X = SCREEN_SIZE[0] - BALL_DIAMETER
 MAX_BALL_Y = SCREEN_SIZE[1] - BALL_DIAMETER
 
-# Paddle Y coordinate
 PADDLE_Y = SCREEN_SIZE[1] - PADDLE_HEIGHT - 10
 
-# Color constants
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 BRICK_COLOR = (200, 200, 0)
 
-# State constants
-STATE_BALL_IN_PADDLE = 0
+STATE_WAIT = 0
 STATE_PLAYING = 1
 STATE_WON = 2
 STATE_GAME_OVER = 3
 
 
 class PB:
-
     def __init__(self):
         pygame.init()
 
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
         pygame.display.set_caption("PingBall")
         self.fps = pygame.time.Clock()
-
-        if pygame.font:
-            self.font = pygame.font.Font(None, 30)
-        else:
-            self.font = None
+        self.font = pygame.font.SysFont('Arial',20)
 
         self.init_game()
 
     def init_game(self):
         self.lives = 3
         self.score = 0
-        self.state = STATE_BALL_IN_PADDLE
+        self.state = STATE_WAIT
 
         self.paddle = pygame.Rect(300, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT)
         self.ball = pygame.Rect(300, PADDLE_Y - BALL_DIAMETER, BALL_DIAMETER, BALL_DIAMETER)
@@ -86,7 +80,7 @@ class PB:
             if self.paddle.left > MAX_PADDLE_X:
                 self.paddle.left = MAX_PADDLE_X
 
-        if keys[pygame.K_SPACE] and self.state == STATE_BALL_IN_PADDLE:
+        if keys[pygame.K_SPACE] and self.state == STATE_WAIT:
             self.ball_vel = [5, -5]
             self.state = STATE_PLAYING
         elif keys[pygame.K_r] and (self.state == STATE_GAME_OVER or self.state == STATE_WON):
@@ -127,7 +121,7 @@ class PB:
         elif self.ball.top > self.paddle.top:
             self.lives -= 1
             if self.lives > 0:
-                self.state = STATE_BALL_IN_PADDLE
+                self.state = STATE_WAIT
             else:
                 self.state = STATE_GAME_OVER
 
@@ -157,7 +151,7 @@ class PB:
             if self.state == STATE_PLAYING:
                 self.move_ball()
                 self.handle_collisions()
-            elif self.state == STATE_BALL_IN_PADDLE:
+            elif self.state == STATE_WAIT:
                 self.ball.left = self.paddle.left + self.paddle.width / 2
                 self.ball.top = self.paddle.top - self.ball.height
                 self.show_message("PRESS SPACE TO LAUNCH THE BALL")
@@ -168,10 +162,8 @@ class PB:
 
             self.draw_bricks()
 
-            # Draw paddle
             pygame.draw.rect(self.screen, BLUE, self.paddle)
 
-            # Draw ball
             pygame.draw.circle(self.screen, WHITE, (self.ball.left + BALL_RADIUS, self.ball.top + BALL_RADIUS),
                                BALL_RADIUS)
 
